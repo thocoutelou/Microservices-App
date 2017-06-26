@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="microServices/src/main/java"/>
+	<classpathentry kind="src" path="microServices/src/test/java"/>
+	<classpathentry exported="true" kind="lib" path="microServices/.mvn/wrapper/maven-wrapper.jar"/>
+	<classpathentry exported="true" kind="lib" path="microServices/target/microServices-0.0.1-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="microServices/target/test-classes"/>
+</classpath>
