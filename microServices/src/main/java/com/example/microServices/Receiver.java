@@ -11,6 +11,7 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
+
 public class Receiver {
 	
 	private final static String QUEUE_NAME = "testing_queue";
