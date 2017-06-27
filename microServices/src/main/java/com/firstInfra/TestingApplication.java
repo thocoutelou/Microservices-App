@@ -23,7 +23,7 @@ public class TestingApplication {
     
     @Bean
     public ConnectionFactory connectionFactory() {
-        return new CachingConnectionFactory("localhost");
+        return new CachingConnectionFactory("172.17.0.2");
     }
 
     @Bean
@@ -31,6 +31,7 @@ public class TestingApplication {
         return new Queue(queueName, false);
     }
 
+    /**
     @Bean
     TopicExchange exchange() {
         return new TopicExchange("spring-boot-exchange");
@@ -41,6 +42,7 @@ public class TestingApplication {
         return BindingBuilder.bind(queue).to(exchange).with(queueName);
     }
 
+**/
     @Bean
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
             MessageListenerAdapter listenerAdapter) {
