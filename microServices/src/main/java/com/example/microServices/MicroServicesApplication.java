@@ -1,7 +1,6 @@
 package com.example.microServices;
 
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
+
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

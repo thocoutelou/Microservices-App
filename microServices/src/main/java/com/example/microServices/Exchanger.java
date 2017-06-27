@@ -8,8 +8,6 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.ConnectionFactory;
 
 
-
-
 /**
  * Will be useful later
  * @author caporali c
@@ -48,6 +46,7 @@ public class Exchanger {
 
     public static void main(String[] argv)
                   throws java.io.IOException, TimeoutException {
+    	
     	ConnectionFactory factory = new ConnectionFactory();
     	factory.setHost("localhost");
     	Connection connection = factory.newConnection();
@@ -58,7 +57,8 @@ public class Exchanger {
         
         
         String message = getMessage(argv);
-        channel.basicPublish("", EXCHANGE_NAME, null, message.getBytes());
+        
+        channel.basicPublish( EXCHANGE_NAME, "", null, message.getBytes());
     	System.out.println(" [x] Sent '" + message + "'");
     	
     	

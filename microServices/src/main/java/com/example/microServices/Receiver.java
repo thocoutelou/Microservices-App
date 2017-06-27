@@ -15,7 +15,7 @@ import com.rabbitmq.client.Envelope;
 public class Receiver {
 	
 	
-	private final static String QUEUE_NAME = "testing_queue";
+	private final static String EXCHANGE_NAME = "testing";
 
 	
 	/*
@@ -34,8 +34,11 @@ public class Receiver {
 	Channel channel = connection.createChannel();
 	
 	
-	boolean durable = true;
-	channel.queueDeclare(QUEUE_NAME, durable, false, false, null);
+	String queueName = channel.queueDeclare().getQueue();
+	channel.queueBind(queueName, EXCHANGE_NAME, "");
+	
+	//boolean durable = true;
+	//channel.queueDeclare(queueName, durable, false, false, null);
     System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 	
     channel.basicQos(1);
@@ -63,6 +66,6 @@ public class Receiver {
 			}
 		};
 		boolean autoAck = false;
-		channel.basicConsume(QUEUE_NAME, autoAck, consumer);
+		channel.basicConsume(queueName, autoAck, consumer);
 	}
 }
