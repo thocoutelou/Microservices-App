@@ -1,7 +1,7 @@
 package com.firstInfra;
 
 
-import java.util.concurrent.TimeUnit;
+//import java.util.concurrent.TimeUnit;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
@@ -26,7 +26,7 @@ public class Runner implements CommandLineRunner {
     public void run(String... args) throws Exception {
         System.out.println("Sending message...");
         rabbitTemplate.convertAndSend(TestingApplication.queueName, "Hello from RabbitMQ!");
-        receiver.getLatch().await(10000, TimeUnit.MILLISECONDS);
+        //receiver.getLatch().await(10000, TimeUnit.MILLISECONDS);
         context.close();
     }
 

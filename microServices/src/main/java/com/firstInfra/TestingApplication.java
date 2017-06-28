@@ -23,7 +23,7 @@ public class TestingApplication {
     
     @Bean
     public ConnectionFactory connectionFactory() {
-        return new CachingConnectionFactory("localhost");
+        return new CachingConnectionFactory("172.17.0.2");
     }
 
     @Bean
@@ -41,6 +41,7 @@ public class TestingApplication {
         return BindingBuilder.bind(queue).to(exchange).with(queueName);
     }
 
+    /**
     @Bean
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
             MessageListenerAdapter listenerAdapter) {
@@ -56,6 +57,7 @@ public class TestingApplication {
         return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 
+*/
     public static void main(String[] args) throws InterruptedException {
         SpringApplication.run(TestingApplication.class, args);
     }
