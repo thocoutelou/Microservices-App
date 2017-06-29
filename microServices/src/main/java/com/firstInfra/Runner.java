@@ -26,6 +26,7 @@ public class Runner implements CommandLineRunner {
 
    
     public void run(String... args) throws Exception {
+
     	
     	Scanner sc = new Scanner(System.in);
     	

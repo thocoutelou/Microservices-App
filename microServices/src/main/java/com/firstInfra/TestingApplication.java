@@ -24,6 +24,7 @@ public class TestingApplication {
     //public static String ipServer="";
     
 
+
 	public static void setQueueName(String queueName) {
 		TestingApplication.queueName = queueName;
 	}
@@ -33,6 +34,7 @@ public class TestingApplication {
     public ConnectionFactory connectionFactory(@Value("${serverIP}")String ipServer) {
     //public ConnectionFactory connectionFactory() {
     	return new CachingConnectionFactory(ipServer);
+
     }
 
     @Bean
@@ -41,6 +43,7 @@ public class TestingApplication {
         return new Queue(queueName, false);
     }
 
+    /**
     @Bean
     TopicExchange exchange() {
         return new TopicExchange("spring-boot-exchange");
@@ -51,7 +54,6 @@ public class TestingApplication {
         return BindingBuilder.bind(queue).to(exchange).with(queueName);
     }
 
-    
     @Bean
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
             MessageListenerAdapter listenerAdapter) {
