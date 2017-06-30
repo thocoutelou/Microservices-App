@@ -54,10 +54,7 @@ public class TestingApplication {
 	}
 
 	/* Beans creation */
-	@Bean
-	public String ipServer() {
-		return (ipServer);
-	}
+	
 
 	@Bean
 	public static boolean isReciever() {
@@ -69,9 +66,15 @@ public class TestingApplication {
 		return filePath;
 	}
 
+	
+	@Bean
+	public String ipServer() {
+		return (ipServer);
+	}
+	
 	@Bean
 	/* Good way to parse argument */
-	public ConnectionFactory connectionFactory(String ipServer) {
+	public ConnectionFactory connectionFactory() {
 		return new CachingConnectionFactory(ipServer);
 	}
 
@@ -118,9 +121,9 @@ public class TestingApplication {
 
 		Options options = new Options();
 
-		Option ipSever = new Option("i", "ip-server", true, "Ip of the RabbitMQ server");
-		ipSever.setRequired(true);
-		options.addOption(ipSever);
+		Option ipServer = new Option("i", "ipServer", true, "Ip of the RabbitMQ server");
+		ipServer.setRequired(true);
+		options.addOption(ipServer);
 
 		Option recieverState = new Option("r", "recieverState", true,
 				"Configure the client to be a reciever [NAME-OF-THE-RECIEVING-QUEUE]");
@@ -150,7 +153,6 @@ public class TestingApplication {
 		}
 
 		setIpServer(cmd.getOptionValue("ipServer"));
-
 		/* When you are in client mode */
 		if (cmd.getOptionValue("recieverState") != null) {
 			setReciever(true);
