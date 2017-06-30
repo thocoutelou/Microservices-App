@@ -2,8 +2,6 @@ package com.firstInfra;
 
 
 
-import java.util.Scanner;
-
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -12,38 +10,51 @@ import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
-import org.springframework.beans.factory.annotation.Value;
+//import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
+import org.apache.commons.cli.*;
 
 @SpringBootApplication
 public class TestingApplication {
 
     private static String queueName;
-    //public static String ipServer="";
+    public static String ipServer;
     
 
+	public static void setIpServer(String ipServer) {
+		TestingApplication.ipServer = ipServer;
+	}
 
 	public static void setQueueName(String queueName) {
 		TestingApplication.queueName = queueName;
 	}
 
 	@Bean
+	public String ipServer(){
+		return(ipServer);
+	}
+	
+    //public ConnectionFactory connectionFactory(@Value("${serverIP}")String ipServer) {
+
+	@Bean
     /*Good way to parse argument*/
-    public ConnectionFactory connectionFactory(@Value("${serverIP}")String ipServer) {
+    public ConnectionFactory connectionFactory(String ipServer) {
     //public ConnectionFactory connectionFactory() {
     	return new CachingConnectionFactory(ipServer);
 
     }
 
+	
+    //Queue queue(@Value("${queueName}")String queueName) {
+
     @Bean
-    Queue queue(@Value("${queueName}")String queueName) {
-    	setQueueName(queueName);
+    Queue queue() {
         return new Queue(queueName, false);
     }
 
-    /**
+    
     @Bean
     TopicExchange exchange() {
         return new TopicExchange("spring-boot-exchange");
@@ -72,6 +83,39 @@ public class TestingApplication {
 
     public static void main(String[] args) throws InterruptedException {
     	
+    	Options options = new Options();
+
+        Option ipSever = new Option("i", "ip-server", true, "ip of the RabbitMQ server");
+        ipSever.setRequired(true);
+        options.addOption(ipSever);
+
+        Option queueName = new Option("q", "queueName", true, "Name of the queue for messages reception");
+        ipSever.setRequired(true);
+        options.addOption(queueName);
+        
+        Option recieverState = new Option("r", "reciever", false, "configure the client to be a reciever");
+        recieverState.setRequired(false);
+        options.addOption(recieverState);
+
+        CommandLineParser parser = new DefaultParser();
+        HelpFormatter formatter = new HelpFormatter();
+        CommandLine cmd;
+
+        try {
+            cmd = parser.parse(options, args);
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            formatter.printHelp("utility-name", options);
+
+            System.exit(1);
+            return;
+        }
+
+        setIpServer(cmd.getOptionValue("ipServer"));
+        setQueueName(cmd.getOptionValue("queueName"));
+
+    
+    	/**
     	if (args.length==0){
     		System.out.println("WARNING : Missing Argumrnts.");
     	}
@@ -79,7 +123,7 @@ public class TestingApplication {
     		System.out.println("Usage: java -jar App.jar --serverIP=[IP-ADDRESS-RABBITMQ-SERVER] --queueName=[NAME-OF-THE-QUEUE]");
     		return;
     	}
-    	/**
+    	
     	Scanner sc = new Scanner(System.in);
     	while (queueName.equals("")){
     		System.out.println("--> Please enter a name for the Queue: ");
