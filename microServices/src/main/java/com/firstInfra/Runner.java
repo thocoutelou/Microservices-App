@@ -57,7 +57,6 @@ public class Runner implements CommandLineRunner {
 				System.out.println("Sending message...");
 				rabbitTemplate.convertAndSend(recieverQueue, message);
 
-				// receiver.getLatch().await(10000, TimeUnit.MILLISECONDS);
 			}
 			sc.close();
 		}
