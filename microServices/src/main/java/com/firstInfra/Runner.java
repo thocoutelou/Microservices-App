@@ -19,6 +19,8 @@ public class Runner implements CommandLineRunner {
 
 
 	private final RabbitTemplate rabbitTemplate;
+	
+	@SuppressWarnings("unused")
 	private final SpringReceiver reciever;
 	private final ConfigurableApplicationContext context;
 
