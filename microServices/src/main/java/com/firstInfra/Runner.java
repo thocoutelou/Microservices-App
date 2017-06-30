@@ -1,5 +1,9 @@
 package com.firstInfra;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -26,13 +30,12 @@ public class Runner implements CommandLineRunner {
 
 	public void run(String... args) throws Exception {
 
-		
 		Scanner sc = new Scanner(System.in);
 
 		if (context.getBean("isReciever").equals(true)) {
 			System.out.println("---- Ready to recieve messages ----");
 			System.out.println("To quit, enter <QUIT>");
-			while(true){
+			while (true) {
 				TimeUnit.MILLISECONDS.sleep(100);
 				String message = sc.nextLine();
 				if (message.equals("QUIT"))
@@ -40,25 +43,35 @@ public class Runner implements CommandLineRunner {
 			}
 
 		} else {
-			while (true) {
-				System.out.println("--> Enter the message you want to send:");
-				System.out.println("<enter QUIT to exit the application>");
-				String message = sc.nextLine();
+			/* if a path to a file is given */
+			
+			if (!context.getBean("pathToFile").equals("")) {
+				System.out.println("Sending a file");
+				String pathToFile = (String) context.getBean("pathToFile");
+				Path path = Paths.get(pathToFile);
+				String recieverQueue = (String) context.getBean("queueToSent");
+				Files.lines(path, StandardCharsets.UTF_8)
+						.forEachOrdered(l -> rabbitTemplate.convertAndSend(recieverQueue, l));
+			} else {
+				while (true) {
+					System.out.println("--> Enter the message you want to send:");
+					System.out.println("<enter QUIT to exit the application>");
+					String message = sc.nextLine();
 
-				if (message.equals("QUIT"))
-					break;
+					if (message.equals("QUIT"))
+						break;
 
-				String recieverQueue = "";
-				while (recieverQueue.equals("")) {
-					System.out.println("--> Enter the name of the receiving queue:");
-					recieverQueue = sc.nextLine();
+					String recieverQueue = "";
+					while (recieverQueue.equals("")) {
+						System.out.println("--> Enter the name of the receiving queue:");
+						recieverQueue = sc.nextLine();
+					}
+
+					System.out.println("Sending message...");
+					rabbitTemplate.convertAndSend(recieverQueue, message);
+
 				}
-
-				System.out.println("Sending message...");
-				rabbitTemplate.convertAndSend(recieverQueue, message);
-
 			}
-			sc.close();
 		}
 		context.close();
 		sc.close();
