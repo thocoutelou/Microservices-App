@@ -21,7 +21,12 @@ public class TestingApplication {
 
     private static String queueName;
     public static String ipServer;
+    public static boolean isReciever=false;
     
+
+	public static void setReciever(boolean isReciever) {
+		TestingApplication.isReciever = isReciever;
+	}
 
 	public static void setIpServer(String ipServer) {
 		TestingApplication.ipServer = ipServer;
@@ -36,6 +41,10 @@ public class TestingApplication {
 		return(ipServer);
 	}
 	
+	@Bean
+	public static boolean isReciever() {
+		return isReciever;
+	}
     //public ConnectionFactory connectionFactory(@Value("${serverIP}")String ipServer) {
 
 	@Bean
@@ -85,7 +94,7 @@ public class TestingApplication {
     	
     	Options options = new Options();
 
-        Option ipSever = new Option("i", "ip-server", true, "ip of the RabbitMQ server");
+        Option ipSever = new Option("i", "ip-server", true, "Ip of the RabbitMQ server");
         ipSever.setRequired(true);
         options.addOption(ipSever);
 
@@ -93,7 +102,7 @@ public class TestingApplication {
         ipSever.setRequired(true);
         options.addOption(queueName);
         
-        Option recieverState = new Option("r", "reciever", false, "configure the client to be a reciever");
+        Option recieverState = new Option("r", "recieverState", false, "Configure the client to be a reciever");
         recieverState.setRequired(false);
         options.addOption(recieverState);
 
@@ -110,14 +119,16 @@ public class TestingApplication {
             System.exit(1);
             return;
         }
-
+        
+        
+        setReciever(cmd.hasOption("recieverState"));
         setIpServer(cmd.getOptionValue("ipServer"));
         setQueueName(cmd.getOptionValue("queueName"));
 
     
     	/**
     	if (args.length==0){
-    		System.out.println("WARNING : Missing Argumrnts.");
+    		System.out.println("WARNING : Missing Arguments.");
     	}
     	if (args.length!=2){
     		System.out.println("Usage: java -jar App.jar --serverIP=[IP-ADDRESS-RABBITMQ-SERVER] --queueName=[NAME-OF-THE-QUEUE]");
