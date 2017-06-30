@@ -10,10 +10,10 @@ import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
-//import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.apache.commons.cli.*;
 
 @SpringBootApplication
@@ -45,20 +45,16 @@ public class TestingApplication {
 	public static boolean isReciever() {
 		return isReciever;
 	}
-    //public ConnectionFactory connectionFactory(@Value("${serverIP}")String ipServer) {
 
 	@Bean
     /*Good way to parse argument*/
     public ConnectionFactory connectionFactory(String ipServer) {
-    //public ConnectionFactory connectionFactory() {
     	return new CachingConnectionFactory(ipServer);
 
     }
 
-	
-    //Queue queue(@Value("${queueName}")String queueName) {
-
     @Bean
+    @Conditional(RecieverCondition.class)
     Queue queue() {
         return new Queue(queueName, false);
     }
@@ -70,11 +66,13 @@ public class TestingApplication {
     }
 
     @Bean
+    @Conditional(RecieverCondition.class)
     Binding binding(Queue queue, TopicExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(queueName);
     }
 
     @Bean
+    @Conditional(RecieverCondition.class)
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
             MessageListenerAdapter listenerAdapter) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
@@ -98,11 +96,13 @@ public class TestingApplication {
         ipSever.setRequired(true);
         options.addOption(ipSever);
 
+        /**
         Option queueName = new Option("q", "queueName", true, "Name of the queue for messages reception");
         ipSever.setRequired(true);
         options.addOption(queueName);
+        */
         
-        Option recieverState = new Option("r", "recieverState", false, "Configure the client to be a reciever");
+        Option recieverState = new Option("r", "recieverState", true, "Configure the client to be a reciever [NAME-OF-THE-RECIEVING-QUEUE]");
         recieverState.setRequired(false);
         options.addOption(recieverState);
 
@@ -123,31 +123,11 @@ public class TestingApplication {
         
         setReciever(cmd.hasOption("recieverState"));
         setIpServer(cmd.getOptionValue("ipServer"));
-        setQueueName(cmd.getOptionValue("queueName"));
+        setQueueName(cmd.getOptionValue("recieverState"));
 
     
-    	/**
-    	if (args.length==0){
-    		System.out.println("WARNING : Missing Arguments.");
-    	}
-    	if (args.length!=2){
-    		System.out.println("Usage: java -jar App.jar --serverIP=[IP-ADDRESS-RABBITMQ-SERVER] --queueName=[NAME-OF-THE-QUEUE]");
-    		return;
-    	}
-    	
-    	Scanner sc = new Scanner(System.in);
-    	while (queueName.equals("")){
-    		System.out.println("--> Please enter a name for the Queue: ");
-    		queueName=sc.nextLine();
-    	}
-    	while(ipServer.equals("")){
-    		System.out.println("--> Please enter the Ip of the RabbitMQ server: ");
-    		ipServer=sc.nextLine();
-    	}
-    	*/
     	
         new SpringApplicationBuilder(TestingApplication.class).web(false).run(args);   
-       // sc.close();
     }
 
 }
