@@ -26,8 +26,17 @@ public class TestingApplication {
 	public static boolean isReciever = false;
 	public static String filePath = "";
 	public static String queueToSent = "";
-
+	public static int START = 1;
+	public static int END = 10;
 	/* Get and set methods */
+
+	public static void setEND(int eND) {
+		END = eND;
+	}
+
+	public static void setSTART(int sTART) {
+		START = sTART;
+	}
 
 	public static void setQueueToSent(String queueToSent) {
 		TestingApplication.queueToSent = queueToSent;
@@ -54,7 +63,6 @@ public class TestingApplication {
 	}
 
 	/* Beans creation */
-	
 
 	@Bean
 	public static boolean isReciever() {
@@ -66,12 +74,21 @@ public class TestingApplication {
 		return filePath;
 	}
 
-	
 	@Bean
 	public String ipServer() {
 		return (ipServer);
 	}
-	
+
+	@Bean
+	public int START() {
+		return (START);
+	}
+
+	@Bean
+	public int END() {
+		return (END);
+	}
+
 	@Bean
 	/* Good way to parse argument */
 	public ConnectionFactory connectionFactory() {
@@ -126,7 +143,7 @@ public class TestingApplication {
 		options.addOption(ipServer);
 
 		Option recieverState = new Option("r", "recieverState", true,
-				"Configure the client to be a reciever [NAME-OF-THE-RECIEVING-QUEUE]");
+				"Configure the client to be a receiver [NAME-OF-THE-RECEIVING-QUEUE]");
 		recieverState.setRequired(false);
 		options.addOption(recieverState);
 
@@ -137,6 +154,16 @@ public class TestingApplication {
 		Option queueToSent = new Option("q", "queueToSent", true, "The name of the queue which messages will be sent");
 		queueToSent.setRequired(false);
 		options.addOption(queueToSent);
+
+		Option start = new Option("s", "start", true,
+				"for the waiting time, between 'start' and 'end' seconds (default: 1-10)");
+		start.setRequired(false);
+		options.addOption(start);
+
+		Option end = new Option("e", "end", true,
+				"for the waiting time, between 'start' and 'end' seconds (default: 1-10)");
+		end.setRequired(false);
+		options.addOption(end);
 
 		CommandLineParser parser = new DefaultParser();
 		HelpFormatter formatter = new HelpFormatter();
@@ -160,6 +187,12 @@ public class TestingApplication {
 
 			/* when you are in publisher mode */
 		} else {
+			if (cmd.getOptionValue("end") != null) {
+				setEND(Integer.parseInt(cmd.getOptionValue("end")));
+			}
+			if (cmd.getOptionValue("start") != null) {
+				setSTART(Integer.parseInt(cmd.getOptionValue("start")));
+			}
 			if (cmd.getOptionValue("filePath") != null) {
 				setFilePath(cmd.getOptionValue("filePath"));
 				setQueueToSent(cmd.getOptionValue("queueToSent"));
