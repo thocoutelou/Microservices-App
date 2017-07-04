@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -20,6 +21,11 @@ public class Runner implements CommandLineRunner {
 
 
 	private final RabbitTemplate rabbitTemplate;
+	public static String serviceForSending="";
+	
+	public static void setServiceForSending(String service) {
+		serviceForSending=service;
+	}
 	
 	@SuppressWarnings("unused")
 	private final SpringReceiver reciever;
@@ -42,6 +48,8 @@ public class Runner implements CommandLineRunner {
 	    int randomNumber =  (int)(fraction + aStart);  
 	    return randomNumber;
 	}
+	
+	
 	  
 	
 	public void run(String... args) throws Exception {
@@ -70,11 +78,13 @@ public class Runner implements CommandLineRunner {
 				System.out.println("Sending a file");
 				String pathToFile = (String) context.getBean("pathToFile");
 				Path path = Paths.get(pathToFile);
-				String serviceToSent = (String) context.getBean("serviceToSent");
+				ArrayList<String> serviceToSent = (ArrayList<String>) context.getBean("serviceToSent");
 				System.out.println((String) context.getBean("serviceToSent"));
-				Files.lines(path, StandardCharsets.UTF_8)
-						.forEachOrdered(l -> rabbitTemplate.convertAndSend("spring-boot-exchanger",
-								serviceToSent, l));
+		        for(int i=0;i<serviceToSent.size();i++) {
+		        	setServiceForSending(serviceToSent.get(i));
+					Files.lines(path, StandardCharsets.UTF_8).forEachOrdered(
+							l -> rabbitTemplate.convertAndSend("spring-boot-exchanger", serviceForSending, l));
+					}
 				TimeUnit.SECONDS.sleep(RandomInteger(start, end, random));
 				}
 				
