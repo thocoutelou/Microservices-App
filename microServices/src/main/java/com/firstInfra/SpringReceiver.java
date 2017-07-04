@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 public class SpringReceiver {
 
     private CountDownLatch latch = new CountDownLatch(1);
+    
+    
 
     public void receiveMessage(String message) {
         System.out.println("Received <" + message + ">");
