@@ -70,9 +70,11 @@ public class Runner implements CommandLineRunner {
 				System.out.println("Sending a file");
 				String pathToFile = (String) context.getBean("pathToFile");
 				Path path = Paths.get(pathToFile);
-				String recieverQueue = (String) context.getBean("queueToSent");
+				String serviceToSent = (String) context.getBean("serviceToSent");
+				System.out.println((String) context.getBean("serviceToSent"));
 				Files.lines(path, StandardCharsets.UTF_8)
-						.forEachOrdered(l -> rabbitTemplate.convertAndSend(recieverQueue, l));
+						.forEachOrdered(l -> rabbitTemplate.convertAndSend("spring-boot-exchanger",
+								serviceToSent, l));
 				TimeUnit.SECONDS.sleep(RandomInteger(start, end, random));
 				}
 				
@@ -86,14 +88,14 @@ public class Runner implements CommandLineRunner {
 					if (message.equals("QUIT"))
 						break;
 
-					String recieverQueue = "";
-					while (recieverQueue.equals("")) {
-						System.out.println("--> Enter the name of the receiving queue:");
-						recieverQueue = sc.nextLine();
+					String serviceToSent = "";
+					while (serviceToSent.equals("")) {
+						System.out.println("--> Enter the name of the service you want to send the message:");
+						serviceToSent = sc.nextLine();
 					}
 
 					System.out.println("Sending message...");
-					rabbitTemplate.convertAndSend(recieverQueue, message);
+					rabbitTemplate.convertAndSend(serviceToSent, message);
 
 				}
 			}

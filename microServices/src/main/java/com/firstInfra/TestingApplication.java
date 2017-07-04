@@ -18,7 +18,6 @@ import org.springframework.context.annotation.Conditional;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.cli.*;
 
@@ -30,6 +29,7 @@ public class TestingApplication {
 	public static boolean isReciever = false;
 	public static String filePath = "";
 	public static String queueToSent = "";
+	public static String serviceToSent = "";
 	public static int START = 1;
 	public static int END = 10;
 	public static ArrayList<String>namesServices = new ArrayList<>();
@@ -53,8 +53,8 @@ public class TestingApplication {
 		START = sTART;
 	}
 
-	public static void setQueueToSent(String queueToSent) {
-		TestingApplication.queueToSent = queueToSent;
+	public static void setServiceToSent(String serviceToSent) {
+		TestingApplication.serviceToSent= serviceToSent;
 	}
 
 	public static String getFilePath() {
@@ -119,8 +119,8 @@ public class TestingApplication {
     }
 
 	@Bean
-	public String queueToSent() {
-		return queueToSent;
+	public String serviceToSent() {
+		return serviceToSent;
 	}
 	
 	
@@ -131,15 +131,14 @@ public class TestingApplication {
 	}
 
 	@Bean
-	@Conditional(RecieverCondition.class)
 	TopicExchange exchange() {
 		return new TopicExchange("spring-boot-exchanger");
 	}
 
 	@Bean
 	@Conditional(RecieverCondition.class)
-	Binding binding(Queue queue, TopicExchange exchange, ArrayList<String> servicesNames ) {
-		return BindingBuilder.bind(queue).to(exchange).with(servicesNames.get(0));
+	Binding binding(ArrayList<String> servicesNames ) {
+		return BindingBuilder.bind(queue()).to(exchange()).with(servicesNames.get(0));
 	}
 
 	@Bean
@@ -177,9 +176,9 @@ public class TestingApplication {
 		filePath.setRequired(false);
 		options.addOption(filePath);
 
-		Option queueToSent = new Option("q", "queueToSent", true, "The name of the queue which messages will be sent");
-		queueToSent.setRequired(false);
-		options.addOption(queueToSent);
+		Option servicesToSent = new Option("t", "servicesToSent", true, "The name of the services which messages will be sent");
+		servicesToSent.setRequired(false);
+		options.addOption(servicesToSent);
 
 		Option start = new Option("s", "start", true,
 				"for the waiting time, between 'start' and 'end' seconds (default: 1-10)");
@@ -198,6 +197,7 @@ public class TestingApplication {
 									.withLongOpt("services")
 									.withDescription("Name of the extra services which will receive the messages")
 									.create('S');
+		
 		services.setRequired(false);
 		options.addOption(services);
 
@@ -246,12 +246,13 @@ public class TestingApplication {
 			}
 			if (cmd.getOptionValue("filePath") != null) {
 				setFilePath(cmd.getOptionValue("filePath"));
-				setQueueToSent(cmd.getOptionValue("queueToSent"));
+				setServiceToSent((cmd.getOptionValue("servicesToSent")));
+				System.out.println(cmd.getOptionValue("servicesToSent"));
 				if (!(new File(TestingApplication.filePath).exists())) {
 					throw new FileNotFoundException("Path to file is not correct.");
 				}
 				try {
-					if (TestingApplication.queueToSent.equals("")) {
+					if (TestingApplication.serviceToSent.equals("")) {
 						System.out.println("Please enter a queue name for sendind");
 						System.exit(1);
 						return;
