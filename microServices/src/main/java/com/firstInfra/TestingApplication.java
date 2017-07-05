@@ -147,7 +147,7 @@ public class TestingApplication {
 
 	@Bean
 	TopicExchange exchange() {
-		return new TopicExchange("spring-boot-exchanger");
+		return new TopicExchange("spring-boot-exchange");
 	}	
 
 	@Bean
