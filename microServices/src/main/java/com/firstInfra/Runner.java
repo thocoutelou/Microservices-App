@@ -19,14 +19,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class Runner implements CommandLineRunner {
 
-
 	private final RabbitTemplate rabbitTemplate;
-	public static String serviceForSending="";
-	
+	public static String serviceForSending = "";
+
 	public static void setServiceForSending(String service) {
-		serviceForSending=service;
+		serviceForSending = service;
 	}
-	
+
 	@SuppressWarnings("unused")
 	private final SpringReceiver reciever;
 	private final ConfigurableApplicationContext context;
@@ -36,26 +35,27 @@ public class Runner implements CommandLineRunner {
 		this.rabbitTemplate = rabbitTemplate;
 		this.context = context;
 	}
-
-	private int RandomInteger(int aStart, int aEnd, Random aRandom){
-	    if (aStart > aEnd) {
-	      throw new IllegalArgumentException("Start cannot exceed End.");
-	    }
-	    //get the range, casting to long to avoid overflow problems
-	    long range = (long)aEnd - (long)aStart + 1;
-	    // compute a fraction of the range, 0 <= frac < range
-	    long fraction = (long)(range * aRandom.nextDouble());
-	    int randomNumber =  (int)(fraction + aStart);  
-	    return randomNumber;
+	/*
+	 * To generate a random int between two values.
+	 * 
+	 */
+	private int RandomInteger(int aStart, int aEnd, Random aRandom) {
+		if (aStart > aEnd) {
+			throw new IllegalArgumentException("Start cannot exceed End.");
+		}
+		// get the range, casting to long to avoid overflow problems
+		long range = (long) aEnd - (long) aStart + 1;
+		// compute a fraction of the range, 0 <= frac < range
+		long fraction = (long) (range * aRandom.nextDouble());
+		int randomNumber = (int) (fraction + aStart);
+		return randomNumber;
 	}
-	
-	
-	  
-	
+
 	public void run(String... args) throws Exception {
 
 		Scanner sc = new Scanner(System.in);
 
+		/* For the Receiver Mode */
 		if (context.getBean("isReciever").equals(true)) {
 			System.out.println("---- Ready to recieve messages ----");
 			System.out.println("To quit, enter <QUIT>");
@@ -67,29 +67,35 @@ public class Runner implements CommandLineRunner {
 			}
 
 		} else {
+			/* For the Publisher Mode */
 			/* if a path to a file is given */
-			
+
 			if (!context.getBean("pathToFile").equals("")) {
-				/*Infinite loop with random wait to simulate activity*/
-				int start=(int) context.getBean("START");
-				int end=(int) context.getBean("END");
+				/* Infinite loop with random wait to simulate activity */
+				int start = (int) context.getBean("START");
+				int end = (int) context.getBean("END");
 				Random random = new Random();
-				while (true){
-				System.out.println("Sending a file");
-				String pathToFile = (String) context.getBean("pathToFile");
-				Path path = Paths.get(pathToFile);
-				ArrayList<String> serviceToSent = (ArrayList<String>) context.getBean("serviceToSent");
-				System.out.println((String) context.getBean("serviceToSent"));
-		        for(int i=0;i<serviceToSent.size();i++) {
-		        	setServiceForSending(serviceToSent.get(i));
-					Files.lines(path, StandardCharsets.UTF_8).forEachOrdered(
-							l -> rabbitTemplate.convertAndSend("spring-boot-exchanger", serviceForSending, l));
+				while (true) {
+					// System.out.println("Sending a file");
+					String pathToFile = (String) context.getBean("pathToFile");
+					Path path = Paths.get(pathToFile);
+
+					@SuppressWarnings("unchecked")
+					ArrayList<String> serviceToSent = (ArrayList<String>) context.getBean("serviceToSent");
+
+					for (int i = 0; i < serviceToSent.size(); i++) {
+						setServiceForSending(serviceToSent.get(i));
+						System.out.println("Sending a file for the service: " + serviceToSent.get(i));
+						/* Send line by line */
+						Files.lines(path, StandardCharsets.UTF_8).forEachOrdered(
+								l -> rabbitTemplate.convertAndSend("spring-boot-exchanger", serviceForSending, l));
 					}
-				TimeUnit.SECONDS.sleep(RandomInteger(start, end, random));
+					/* for simulate the input */
+					TimeUnit.SECONDS.sleep(RandomInteger(start, end, random));
 				}
-				
-			} 
-			else {
+
+			} else {
+				/* Not used anymore*/
 				while (true) {
 					System.out.println("--> Enter the message you want to send:");
 					System.out.println("<enter QUIT to exit the application>");

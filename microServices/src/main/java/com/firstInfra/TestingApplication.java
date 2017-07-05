@@ -41,6 +41,10 @@ public class TestingApplication {
 	public static ArrayList<String> getNamesServices() {
 		return namesServices;
 	}
+	
+	public static ArrayList<String> getNamesServicesToSent() {
+		return serviceToSent;
+	}
 
 	public static void setEND(int eND) {
 		END = eND;
@@ -72,11 +76,7 @@ public class TestingApplication {
 
 	/* Beans creation */
 
-	@Bean
-	@Conditional(RecieverCondition.class)
-	public static ArrayList<String> namesServices() {
-		return namesServices;
-	}
+	
 
 	/* boolean to see if it is in Receiver mode or Publisher mode */
 	@Bean
@@ -84,6 +84,14 @@ public class TestingApplication {
 		return isReciever;
 	}
 
+	
+	@Bean
+	@Conditional(RecieverCondition.class)
+	public static ArrayList<String> namesServices() {
+		return namesServices;
+	}
+	
+	
 	/* path to the file to send */
 	@Bean
 	public static String pathToFile() {
@@ -124,9 +132,8 @@ public class TestingApplication {
 	}
 
 	@Bean
-	@Conditional(RecieverCondition.class)
-	//TODO find the opposite of conditional
-	public ArrayList<String> serviceToSent() {
+	@Conditional(PublisherCondition.class)
+		public ArrayList<String> serviceToSent() {
 		return serviceToSent;
 	}
 
@@ -182,17 +189,22 @@ public class TestingApplication {
 		ipServer.setRequired(true);
 		options.addOption(ipServer);
 
-		Option recieverState = new Option("r", "recieverState", true, "Configure the client to be a receiver");
+		/* a different constructor to give more arguments to an option */
+		@SuppressWarnings({ "deprecation", "static-access" })
+		Option recieverState = OptionBuilder.withArgName("ServicesNames").withValueSeparator(' ').hasArgs(1).hasOptionalArgs()
+				.withLongOpt("recieverState").withDescription("Receiver Mode : [Name of the extra services which will receive the messages]")
+				.create('r');
 		recieverState.setRequired(false);
 		options.addOption(recieverState);
-
+		
 		Option filePath = new Option("f", "filePath", true, "Path of the file to read for sending");
 		filePath.setRequired(false);
 		options.addOption(filePath);
 
-		Option servicesToSent = new Option("t", "servicesToSent", true,
-				"The name of the services which messages will be sent");
-		servicesToSent.setOptionalArg(true);;
+		@SuppressWarnings({ "deprecation", "static-access" })
+		Option servicesToSent = OptionBuilder.withArgName("ServicesNames for sending").withValueSeparator(' ').hasArgs(1).hasOptionalArgs()
+				.withLongOpt("servicesToSent").withDescription("Publisher Mode :Name of the services which will receive the messages")
+				.create('t');
 		servicesToSent.setRequired(false);
 		options.addOption(servicesToSent);
 
@@ -206,14 +218,6 @@ public class TestingApplication {
 		end.setRequired(false);
 		options.addOption(end);
 
-		/* a different constructor to give more arguments to an option */
-		@SuppressWarnings({ "deprecation", "static-access" })
-		Option services = OptionBuilder.withArgName("Name of the services").withValueSeparator(' ').hasOptionalArgs()
-				.withLongOpt("services").withDescription("Name of the extra services which will receive the messages")
-				.create('S');
-
-		services.setRequired(false);
-		options.addOption(services);
 
 		/* to read the arguments */
 		CommandLineParser parser = new DefaultParser();
@@ -240,16 +244,15 @@ public class TestingApplication {
 		if (cmd.getOptionValue("recieverState") != null) {
 			setReciever(true);
 			System.out.println(cmd.getOptionValue("recieverState"));
-			addService(cmd.getOptionValue("recieverState"));
 			/* Add the services names for the routing keys */
 			int i = 0;
 			try {
-				while ((cmd.getOptionValues("services")[i] != null)) {
-					addService(cmd.getOptionValues("services")[i]);
+				while ((cmd.getOptionValues("recieverState")[i] != null)) {
+					addService(cmd.getOptionValues("recieverState")[i]);
 					i++;
 				}
 			} catch (Exception e) {
-				System.out.println(getNamesServices().toString());
+				System.out.println("listening for the services :" + getNamesServices().toString());
 
 			}
 
@@ -270,12 +273,10 @@ public class TestingApplication {
 						addServiceToSent(cmd.getOptionValues("servicesToSent")[i]);
 						i++;
 					}
-				} catch (ArrayIndexOutOfBoundsException e) {
-					System.out.println(getNamesServices().toString());
+				} catch (Exception e) {
+					System.out.println(getNamesServicesToSent().toString());
 
 				}
-				//setServiceToSent((cmd.getOptionValue("servicesToSent")));
-				System.out.println(cmd.getOptionValue("servicesToSent"));
 				if (!(new File(TestingApplication.filePath).exists())) {
 					throw new FileNotFoundException("Path to file is not correct.");
 				}
