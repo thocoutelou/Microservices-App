@@ -17,7 +17,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 
-import com.withBoardManager.boardManager.TestingApplication;
+import com.withBoardManager.boardManager.ManagerBoardApplication;
 
 @SpringBootApplication
 public class PublisherApplication {
@@ -32,7 +32,7 @@ public class PublisherApplication {
 	}
 
 	public static void setIpServer(String ipServer) {
-		TestingApplication.ipServer = ipServer;
+		ManagerBoardApplication.ipServer = ipServer;
 	}
 	
 	@Bean
@@ -53,7 +53,7 @@ public class PublisherApplication {
 	
 	@Bean
 	TopicExchange exchange() {
-		return new TopicExchange("sb-BoardManager-exchange");
+		return new TopicExchange("sb-boardManager-exchange");
 	}	
 
 
