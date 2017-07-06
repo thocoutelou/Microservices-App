@@ -129,7 +129,7 @@ public class ManagerBoardApplication {
 
 	@Bean
 	TopicExchange exchangeForSending() {
-		return new TopicExchange("spring-boot-exchange");
+		return new TopicExchange("spring-boot-exchanger");
 	}
 
 	@Bean
