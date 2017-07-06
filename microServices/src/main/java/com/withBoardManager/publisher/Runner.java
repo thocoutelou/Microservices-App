@@ -34,7 +34,7 @@ public class Runner implements CommandLineRunner {
 		TopicExchange exchange = (TopicExchange) context.getBean("exchange");
 		System.out.println("Target: "+ nameService);
 		rabbitTemplate.convertAndSend(exchange.getName(),nameService, "Event");
-		rabbitTemplate.convertAndSend(exchange.getName(),nameService, IP.getHostAddress());
+		//rabbitTemplate.convertAndSend(exchange.getName(),nameService, IP.getHostAddress());
 		System.out.println("----END----");
 		context.close();
 	}

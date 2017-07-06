@@ -65,6 +65,11 @@ public class ManagerBoardApplication {
 	public static String serviceForReceiving() {
 		return serviceForReceiving;
 	}
+	
+	@Bean
+	public ArrayList<String> serviceToSent(){
+		return serviceToSent;
+	}
 
 	/* ip or URL of the server RabbitMQ */
 	@Bean
@@ -104,13 +109,14 @@ public class ManagerBoardApplication {
 	public AmqpAdmin amqpAdmin() {
 		return new RabbitAdmin(connectionFactory());
 	}
-/**
+	
+    
 	@Bean
-	public ArrayList<String> serviceToSent() {
-		return serviceToSent;
+	public HttpResponse httpResponse(){
+		return new HttpResponse();
 	}
-*/
-	/* Condition: if it is in receiver mode */
+
+
 	@Bean
 	Queue queue() {
 		return amqpAdmin().declareQueue();

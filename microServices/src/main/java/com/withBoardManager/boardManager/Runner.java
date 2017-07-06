@@ -1,5 +1,6 @@
 package com.withBoardManager.boardManager;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -28,84 +29,27 @@ public class Runner implements CommandLineRunner {
 		this.context = context;
 	}
 
-	/*
-	 * To generate a random int between two values.
-	 * 
-	 */
-	/*
-	private int RandomInteger(int aStart, int aEnd, Random aRandom) {
-		if (aStart > aEnd) {
-			throw new IllegalArgumentException("Start cannot exceed End.");
-		}
-		// get the range, casting to long to avoid overflow problems
-		long range = (long) aEnd - (long) aStart + 1;
-		// compute a fraction of the range, 0 <= frac < range
-		long fraction = (long) (range * aRandom.nextDouble());
-		int randomNumber = (int) (fraction + aStart);
-		return randomNumber;
-	}
-*/
+	
 	public void run(String... args) throws Exception {
 
-		Scanner sc = new Scanner(System.in);
 
 		/* For the Receiver Mode */
 		System.out.println("---- Ready to receive event----");
 		System.out.println("To quit, enter <QUIT>");
 		while (true) {
-			TimeUnit.MILLISECONDS.sleep(300);
-			String message = sc.nextLine();
-			if (message.equals("QUIT"))
-				break;
-		}
-		/* For the Publisher Mode */
-		/* if a path to a file is given */
-		/* Infinite loop with random wait to simulate activity */
-		/**
-		 * int start = (int) context.getBean("START"); int end = (int)
-		 * context.getBean("END"); Random random = new Random(); while (true) {
-		 * 
-		 * @SuppressWarnings("unchecked") ArrayList<String> serviceToSent =
-		 * (ArrayList<String>) context.getBean("serviceToSent");
-		 * 
-		 * for (int i = 0; i < serviceToSent.size(); i++) {
-		 * setServiceForSending(serviceToSent.get(i));
-		 * System.out.println("Sending a file for the service: " +
-		 * serviceToSent.get(i)); /* Send line by line
-		 */
-		// rabbitTemplate.convertAndSend("spring-boot-exchanger",
-		// serviceForSending, "hello");
-		// }
-		/* for simulate the input */
-		/*
-		 * TimeUnit.SECONDS.sleep(RandomInteger(start, end, random)); }
-		 * 
-		 * }
-		 */
-		// else {
-		/* Not used anymore */
-		while (true)
-
-		{
-			System.out.println("--> Enter the message you want to send:");
-			System.out.println("<enter QUIT to exit the application>");
-			String message = sc.nextLine();
-
-			if (message.equals("QUIT"))
-				break;
-
-			String serviceToSent = "";
-			while (serviceToSent.equals("")) {
-				System.out.println("--> Enter the name of the service you want to send the message:");
-				serviceToSent = sc.nextLine();
+			TimeUnit.MILLISECONDS.sleep(250);
+			/* For sending response */
+			if(context.getBean(HttpResponse.class).isNew()){
+				int number= Integer.parseInt((context.getBean(HttpResponse.class).getResponse()));
+				@SuppressWarnings("unchecked")
+				ArrayList<String> servicesManaged =((ArrayList<String>) context.getBean("serviceToSent"));
+				int modulo= servicesManaged.size();
+				number= number%modulo;
+				rabbitTemplate.convertAndSend("spring-boot-exchanger",servicesManaged.get(number), "hello");
+				System.out.println("Send message to: "+servicesManaged.get(number));
+				context.getBean(HttpResponse.class).setNew(false);
 			}
-
-			System.out.println("Sending message...");
-			rabbitTemplate.convertAndSend(serviceToSent, message);
-
 		}
-		context.close();
-		sc.close();
 
 	}
 
