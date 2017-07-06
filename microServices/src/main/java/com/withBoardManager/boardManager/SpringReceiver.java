@@ -3,6 +3,7 @@ package com.withBoardManager.boardManager;
 
 import java.util.concurrent.CountDownLatch;
 
+import org.json.JSONObject;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -19,17 +20,19 @@ public class SpringReceiver {
     public void receiveMessage(String message) throws Exception {
     	
     	String urlToRead = (String) context.getBean("httpServer");
-        System.out.println(urlToRead);
+        //System.out.println(urlToRead);
 
         System.out.println("Received <" + message + ">");
+
         if(message.equals("Event")){
-        	//DONE send an HTTP REQUEST too the CountingManager
         	String result=HTTPrequest.getHTML(urlToRead+"/event");
-        	((HttpResponse) context.getBean("httpResponse")).setResponse(result);
+        	JSONObject json = new JSONObject(result);
+        	((HttpResponse) context.getBean("httpResponse")).setResponse((String)json.get("service"));
         	((HttpResponse) context.getBean("httpResponse")).setNew(true);
         	System.out.println("The server has sent: "+((HttpResponse) context.getBean("httpResponse")).getResponse());
         }
         latch.countDown();
+
     }
 
     
