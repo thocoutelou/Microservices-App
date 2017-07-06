@@ -22,6 +22,7 @@ import org.apache.commons.cli.*;
 public class ManagerBoardApplication {
 
 	public static String ipServer;
+	public static String httpServer;
 	// public static String filePath = "";
 	public static ArrayList<String> serviceToSent = new ArrayList<>();
 	public static int START = 1;
@@ -48,6 +49,11 @@ public class ManagerBoardApplication {
 	public static void setIpServer(String ipServer) {
 		ManagerBoardApplication.ipServer = ipServer;
 	}
+	
+	public static void sethttpServer (String url) {
+		ManagerBoardApplication.httpServer = url;
+	}
+
 
 	public static void setServiceForReceiving(String service) {
 		serviceForReceiving = service;
@@ -65,6 +71,12 @@ public class ManagerBoardApplication {
 	public String ipServer() {
 		return (ipServer);
 	}
+	/* URL of the http server */
+	@Bean
+	public String httpServer() {
+		return (httpServer);
+	}
+	
 
 	/* for simulate the randomized inputs */
 	@Bean
@@ -130,6 +142,8 @@ public class ManagerBoardApplication {
 		container.setMessageListener(listenerAdapter);
 		return container;
 	}
+	
+	
 
 	@Bean
 	MessageListenerAdapter listenerAdapter(SpringReceiver receiver) {
@@ -148,6 +162,11 @@ public class ManagerBoardApplication {
 		Option ipServer = new Option("i", "ipServer", true, "Ip of the RabbitMQ server");
 		ipServer.setRequired(true);
 		options.addOption(ipServer);
+		
+		Option httpServer = new Option("h", "httpServer", true, "Ip or url of the http server");
+		httpServer.setRequired(true);
+		options.addOption(httpServer);
+
 
 		Option serviceForReceiving = new Option("s", "serviceForReceiving", true,
 				"Name of the service for receiving message from terminalCall");
@@ -193,6 +212,7 @@ public class ManagerBoardApplication {
 		//////////////////////////////////////////////////
 
 		setIpServer(cmd.getOptionValue("ipServer"));
+		sethttpServer(cmd.getOptionValue("httpServer"));
 		setServiceForReceiving(cmd.getOptionValue("serviceForReceiving"));
 
 		

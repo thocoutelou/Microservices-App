@@ -32,6 +32,7 @@ public class Runner implements CommandLineRunner {
 	 * To generate a random int between two values.
 	 * 
 	 */
+	/*
 	private int RandomInteger(int aStart, int aEnd, Random aRandom) {
 		if (aStart > aEnd) {
 			throw new IllegalArgumentException("Start cannot exceed End.");
@@ -43,7 +44,7 @@ public class Runner implements CommandLineRunner {
 		int randomNumber = (int) (fraction + aStart);
 		return randomNumber;
 	}
-
+*/
 	public void run(String... args) throws Exception {
 
 		Scanner sc = new Scanner(System.in);
