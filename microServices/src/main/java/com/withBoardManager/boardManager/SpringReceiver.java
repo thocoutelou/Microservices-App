@@ -15,7 +15,6 @@ public class SpringReceiver {
 	public SpringReceiver(ConfigurableApplicationContext context) {
 		this.context=context;
 	}
-    
 
     public void receiveMessage(String message) throws Exception {
     	
@@ -26,7 +25,9 @@ public class SpringReceiver {
         if(message.equals("Event")){
         	//DONE send an HTTP REQUEST too the CountingManager
         	String result=HTTPrequest.getHTML(urlToRead+"/event");
-        	System.out.println("From HTTP server: " + result);
+        	((HttpResponse) context.getBean("httpResponse")).setResponse(result);
+        	((HttpResponse) context.getBean("httpResponse")).setNew(true);
+        	System.out.println("The server has sent: "+((HttpResponse) context.getBean("httpResponse")).getResponse());
         }
         latch.countDown();
     }
