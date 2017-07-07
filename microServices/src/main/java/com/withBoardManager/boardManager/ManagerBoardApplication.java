@@ -23,7 +23,7 @@ public class ManagerBoardApplication {
 
 	public static String ipServer;
 	public static String httpServer;
-	// public static String filePath = "";
+	public static ArrayList<String> prefix = new ArrayList<>();
 	public static ArrayList<String> serviceToSent = new ArrayList<>();
 	public static int START = 1;
 	public static int END = 10;
@@ -32,6 +32,10 @@ public class ManagerBoardApplication {
 	/* Get and set methods */
 	static ArrayList<String> getNamesServicesToSent() {
 		return serviceToSent;
+	}
+
+	static ArrayList<String> getPrefix() {
+		return prefix;
 	}
 
 	public static void setEND(int eND) {
@@ -46,14 +50,17 @@ public class ManagerBoardApplication {
 		ManagerBoardApplication.serviceToSent.add(serviceToSent);
 	}
 
+	public static void addPrefixString(String servicePrefix) {
+		prefix.add(servicePrefix);
+	}
+
 	public static void setIpServer(String ipServer) {
 		ManagerBoardApplication.ipServer = ipServer;
 	}
-	
-	public static void sethttpServer (String url) {
+
+	public static void sethttpServer(String url) {
 		ManagerBoardApplication.httpServer = url;
 	}
-
 
 	public static void setServiceForReceiving(String service) {
 		serviceForReceiving = service;
@@ -65,10 +72,15 @@ public class ManagerBoardApplication {
 	public static String serviceForReceiving() {
 		return serviceForReceiving;
 	}
-	
+
 	@Bean
-	public ArrayList<String> serviceToSent(){
+	public ArrayList<String> serviceToSent() {
 		return serviceToSent;
+	}
+
+	@Bean
+	public ArrayList<String> prefix() {
+		return prefix;
 	}
 
 	/* ip or URL of the server RabbitMQ */
@@ -76,12 +88,12 @@ public class ManagerBoardApplication {
 	public String ipServer() {
 		return (ipServer);
 	}
+
 	/* URL of the http server */
 	@Bean
 	public String httpServer() {
 		return (httpServer);
 	}
-	
 
 	/* for simulate the randomized inputs */
 	@Bean
@@ -109,13 +121,11 @@ public class ManagerBoardApplication {
 	public AmqpAdmin amqpAdmin() {
 		return new RabbitAdmin(connectionFactory());
 	}
-	
-    
+
 	@Bean
-	public HttpResponse httpResponse(){
+	public HttpResponse httpResponse() {
 		return new HttpResponse();
 	}
-
 
 	@Bean
 	Queue queue() {
@@ -148,8 +158,6 @@ public class ManagerBoardApplication {
 		container.setMessageListener(listenerAdapter);
 		return container;
 	}
-	
-	
 
 	@Bean
 	MessageListenerAdapter listenerAdapter(SpringReceiver receiver) {
@@ -168,11 +176,10 @@ public class ManagerBoardApplication {
 		Option ipServer = new Option("i", "ipServer", true, "Ip of the RabbitMQ server");
 		ipServer.setRequired(true);
 		options.addOption(ipServer);
-		
+
 		Option httpServer = new Option("h", "httpServer", true, "Ip or url of the http server");
 		httpServer.setRequired(true);
 		options.addOption(httpServer);
-
 
 		Option serviceForReceiving = new Option("s", "serviceForReceiving", true,
 				"Name of the service for receiving message from terminalCall");
@@ -181,11 +188,19 @@ public class ManagerBoardApplication {
 
 		/* a different constructor to give more arguments to an option */
 		@SuppressWarnings({ "deprecation", "static-access" })
-		Option servicesToSent = OptionBuilder.withArgName("ServicesNames for sending").withValueSeparator(' ').hasArgs(1).hasOptionalArgs()
-				.withLongOpt("servicesToSent").withDescription("Name of the services which will receive the messages")
-				.create('t');
-		servicesToSent.setRequired(false);
+		Option servicesToSent = OptionBuilder.withArgName("ServicesNames for sending").withValueSeparator(' ')
+				.hasArgs(1).hasOptionalArgs().withLongOpt("servicesToSent")
+				.withDescription("Name of the services which will receive the messages").create('t');
+		servicesToSent.setRequired(true);
 		options.addOption(servicesToSent);
+
+		@SuppressWarnings({ "deprecation", "static-access" })
+		Option prefix = OptionBuilder.withArgName("prefix for sending").withValueSeparator(' ').hasOptionalArgs()
+				.withLongOpt("prefix")
+				.withDescription("Prefix for the answer to a board. WARNING correrpond to the service order ")
+				.create('p');
+		prefix.setRequired(false);
+		options.addOption(prefix);
 
 		Option start = new Option("st", "start", true,
 				"for the waiting time, between 'start' and 'end' seconds (default: 1-10)");
@@ -196,8 +211,6 @@ public class ManagerBoardApplication {
 				"for the waiting time, between 'start' and 'end' seconds (default: 1-10)");
 		end.setRequired(false);
 		options.addOption(end);
-		
-		
 
 		/* to read the arguments */
 		CommandLineParser parser = new DefaultParser();
@@ -221,17 +234,26 @@ public class ManagerBoardApplication {
 		sethttpServer(cmd.getOptionValue("httpServer"));
 		setServiceForReceiving(cmd.getOptionValue("serviceForReceiving"));
 
-		
-		int i=0;
+		int i = 0;
 		try {
 			while ((cmd.getOptionValues("servicesToSent")[i] != null)) {
 				addServiceToSent(cmd.getOptionValues("servicesToSent")[i]);
 				i++;
 			}
 		} catch (Exception e) {
-			System.out.println("Managing the services: "+getNamesServicesToSent().toString());
+			System.out.println("Managing the services: " + getNamesServicesToSent().toString());
 		}
-		
+
+		i = 0;
+		try {
+			while ((cmd.getOptionValues("prefix")[i] != null)) {
+				addPrefixString(cmd.getOptionValues("prefix")[i]);
+				i++;
+			}
+		} catch (Exception e) {
+			System.out.println("With the Prefix: " + getPrefix().toString());
+		}
+
 		if (cmd.getOptionValue("end") != null) {
 			setEND(Integer.parseInt(cmd.getOptionValue("end")));
 		}
