@@ -1,12 +1,13 @@
 package com.withBoardManager.publisher;
 
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
-
 
 @Component
 public class Runner implements CommandLineRunner {
@@ -27,15 +28,21 @@ public class Runner implements CommandLineRunner {
 
 	public void run(String... args) throws Exception {
 
-		System.out.println("Sending an event...");
-		//InetAddress IP=InetAddress.getLocalHost();
-		String nameService = (String) context.getBean("service");
-		TopicExchange exchange = (TopicExchange) context.getBean("exchange");
-		System.out.println("Target: "+ nameService);
-		rabbitTemplate.convertAndSend(exchange.getName(),nameService, "Event");
-		//rabbitTemplate.convertAndSend(exchange.getName(),nameService, IP.getHostAddress());
-		System.out.println("----END----");
-		context.close();
+		Random rand= new Random();
+
+		while (true) {
+			TimeUnit.SECONDS.sleep(rand.nextInt(10));
+
+			System.out.println("Sending an event...");
+			// InetAddress IP=InetAddress.getLocalHost();
+			String nameService = (String) context.getBean("service");
+			TopicExchange exchange = (TopicExchange) context.getBean("exchange");
+			System.out.println("Target: " + nameService);
+			rabbitTemplate.convertAndSend(exchange.getName(), nameService, "Event");
+			// rabbitTemplate.convertAndSend(exchange.getName(),nameService,
+			// IP.getHostAddress());
+			System.out.println("--------");
+		}
 	}
 
 }
