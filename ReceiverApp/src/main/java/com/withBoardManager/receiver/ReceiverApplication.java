@@ -155,6 +155,6 @@ public class ReceiverApplication {
 		
 
 		/* Launch the Spring-boot application */
-		new SpringApplicationBuilder(ReceiverApplication.class).web(false).run(args);
+		new SpringApplicationBuilder(ReceiverApplication.class).run(args);
 	}
 }
