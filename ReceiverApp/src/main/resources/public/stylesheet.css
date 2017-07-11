@@ -1,0 +1,126 @@
+/**
+* Start of the calling modal
+*/
+
+#calling-modal .modal-dialog {
+    margin: 457px auto!important;
+    width: 84%;
+    color: black;
+}
+
+#calling-modal .modal-content {
+
+}
+
+#calling-modal .modal-body {
+    padding: 15px 13px;
+}
+
+#calling-modal .modal {
+    text-align: center;
+}
+
+#calling-modal .patient-row {
+    padding: 57px 0;
+    border-bottom: none;
+    margin: 0 44px;
+    /* text-align: center; */
+}
+
+#calling-modal .patient-row .ticket {
+    padding: 0;
+    font-size: 139px;
+    text-align: center;
+    margin: 0 47px 0 38px;
+}
+
+#calling-modal .patient-row .arrow {
+    padding: 0;
+    margin: 43px 0px;
+    font-size: 80px;
+    text-align: center;
+}
+
+#calling-modal .patient-row .destination {
+    margin-left: 49px;
+    padding: 0;
+    text-align: left;
+}
+
+#calling-modal .patient-row .destination .room {
+    margin-top: -24px;
+    display: block;
+    font-size: 133px;
+}
+
+#calling-modal .patient-row .destination .category {
+    font-size: 54px;
+    font-family: 'Open Sans', sans-serif;
+    display: block;
+    margin: -50px 0 0 6px;
+}
+
+/**
+* End of the calling modal
+*/
+
+.time-cont {
+    font-size: 125px;
+    margin-top: -20px;
+    margin-left: 3px;
+    padding-right: 0;
+}
+
+.date-cont {
+    font-size: 44px;
+    margin-top: -14px;
+    margin-left: -2px;
+    padding-right: 0;
+}
+
+.my-page-header {
+    font-size: 83px;
+}
+
+.patients-list {
+    margin-top: 88px;
+}
+
+.patients-list .patient-row {
+    font-size: 110px;
+    padding: 20px 0;
+}
+
+.patients-list .patient-row .ticket {
+    margin-left: 29px;
+    padding-left: 0;
+    font-size: 95px;
+}
+
+.patients-list .patient-row .arrow {
+    font-size: 60px;
+    margin-top: 26px;
+}
+
+.patients-list .patient-row .destination {
+    margin-left: 48px;
+}
+
+.patients-list .patient-row .destination .room {
+    margin-top: -19px;
+    display: block;
+    font-size: 87px;
+}
+
+.patients-list .patient-row .destination .category {
+    font-size: 36px;
+    font-family: 'Open Sans', sans-serif;
+    display: block;
+    margin: -28px 0 0px 4px;
+}
+
+.patients-list .patient-row .time {
+    font-size: 95px;
+    margin-left: 76px;
+    padding: 0;
+}

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://use.fontawesome.com/09e3cb4e0f.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300|Source+Sans+Pro" rel="stylesheet">
+
+    <link rel="stylesheet" href="stylesheet.css">
+    <link rel="stylesheet" href="../common.css">
+
+    <script src="../vendor/jquery-3.1.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="../vendor/velocity.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.ui.min.js"></script>
+
+    <script src="script.js"></script>
+
+    <title>Ambulatory board</title>
+</head>
+<body>
+    <!--Modal-->
+    <div id="calling-modal" class="modal" data-easein="swoopIn" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!--<div class="modal-body col-xs-11 col-xs-offset-1">
+                    <div class=" ticket">W008</div>
+                    <div class="arrow-cont"><i class="fa fa-arrow-right my-arrow" aria-hidden="true"></i></div>
+
+                    <div class="destination">
+                        <span class="room">ECO3</span>
+                        <span class="category">Ecografia</span>
+                    </div>
+                </div> -->
+
+                <div class="row patient-row">
+                    <div class="col-xs-4 ticket">E009</div>
+                    <div class="col-xs-1 arrow"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
+                    <div class="col-xs-5 destination">
+                        <span class="room">ECO3</span>
+                        <span class="category">Ecografia</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--Modal-->
+
+
+    <section class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 time-cont">
+                <span class="pull-right">13:45</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 date-cont">
+                <span class="pull-right">Monday 27 February</span>
+            </div>
+        </div>
+
+        <!--
+        <div class="row">
+            <div class="col-xs-12 my-page-header">
+                <span>Sportello queue</span>
+            </div>
+        </div>
+        -->
+
+        <section class="patients-list">
+            <div class="row patient-row">
+                <div class="col-xs-3 ticket">E009</div>
+                <div class="col-xs-1 arrow"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
+                <div class="col-xs-3 destination">
+                    <span class="room">ECO3</span>
+                    <span class="category">Ecografia</span>
+                </div>
+                <div class="col-xs-3 time">13:45</div>
+            </div>
+
+            <div class="row patient-row">
+                <div class="col-xs-3 ticket">P016</div>
+                <div class="col-xs-1 arrow"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
+                <div class="col-xs-3 destination">
+                    <span class="room">PED8</span>
+                    <span class="category">Pediatria</span>
+                </div>
+                <div class="col-xs-3 time">13:50</div>
+            </div>
+
+            <div class="row patient-row">
+                <div class="col-xs-3 ticket">C002</div>
+                <div class="col-xs-1 arrow"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
+                <div class="col-xs-3 destination">
+                    <span class="room">CAR1</span>
+                    <span class="category">Cardiologia</span>
+                </div>
+                <div class="col-xs-3 time">14:00</div>
+            </div>
+
+            <div class="row patient-row">
+                <div class="col-xs-3 ticket">C003</div>
+                <div class="col-xs-1 arrow"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
+                <div class="col-xs-3 destination">
+                    <span class="room">CAR3</span>
+                    <span class="category">Cardiologia</span>
+                </div>
+                <div class="col-xs-3 time">14:00</div>
+            </div>
+
+            <div class="row patient-row">
+                <div class="col-xs-3 ticket">E010</div>
+                <div class="col-xs-1 arrow"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
+                <div class="col-xs-3 destination">
+                    <span class="room">ECO4</span>
+                    <span class="category">Ecografia</span>
+                </div>
+                <div class="col-xs-3 time">14:15</div>
+            </div>
+
+            <div class="row patient-row">
+                <div class="col-xs-3 ticket">P017</div>
+                <div class="col-xs-1 arrow"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
+                <div class="col-xs-3 destination">
+                    <span class="room">PED2</span>
+                    <span class="category">Pediatria</span>
+                </div>
+                <div class="col-xs-3 time">14:15</div>
+            </div>
+
+            <div class="row patient-row">
+                <div class="col-xs-3 ticket">P018</div>
+                <div class="col-xs-1 arrow"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
+                <div class="col-xs-3 destination">
+                    <span class="room">PED4</span>
+                    <span class="category">Pediatria</span>
+                </div>
+                <div class="col-xs-3 time">14:15</div>
+            </div>
+
+            <div class="row patient-row">
+                <div class="col-xs-3 ticket">E011</div>
+                <div class="col-xs-1 arrow"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
+                <div class="col-xs-3 destination">
+                    <span class="room">ECO5</span>
+                    <span class="category">Ecografia</span>
+                </div>
+                <div class="col-xs-3 time">14:30</div>
+            </div>
+
+        </section>
+
+
+
+    </section>
+
+    <!--<p class="ticker">Lorem ipsum dolor sit amet, consectetur</p>-->
+    <p class="artexe-web">artexe.com</p>
+</body>
+</html>

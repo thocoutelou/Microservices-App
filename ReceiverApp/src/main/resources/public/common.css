@@ -1,0 +1,47 @@
+body {
+    background-color: #1a4aa8;
+    color: white;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.container-fluid {
+    margin: 0px 35px 21px 35px;
+}
+
+.time-cont {
+    height: 160px;
+}
+
+.date-cont {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.my-page-header {
+    text-align: center;
+}
+
+.patient-row {
+    border-bottom: 2px solid #eee;
+}
+
+.patient-row .ticket {
+    text-align: left;
+}
+
+.patient-row .destination {
+    text-align: left;
+}
+
+.ticker {
+    font-size: 48px;
+    margin: 84px 0 0 0px;
+    font-family: 'Open Sans', sans-serif;
+    text-align: right;
+}
+
+.artexe-web {
+    font-size: 28px;
+    /*margin: 21px 0 0 23px;*/
+    margin: 162px 0 0 36px;
+    font-family: 'Open Sans', sans-serif;
+}
