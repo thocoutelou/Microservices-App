@@ -1,33 +1,49 @@
 $(document).ready(function () {
-    //init
+	 //init
     $('#calling-modal').modal({show:false});
-
     //add custom animation
     $('#calling-modal').on('show.bs.modal', function (e) {
         var open = $(this).attr('data-easein');
-        console.log(open);
         $('.modal-dialog').velocity('transition.' + open);
     });
-
-    showModal();
+	
+	var ws = new WebSocket('ws://192.168.12.252:15674/ws');
+	var client = Stomp.over(ws);
+	
+	var on_connect = function() {
+		console.log('connected');
+		var element=document.getElementById("queue");
+		var queue=element.getAttribute("name")
+		console.log(name);
+		client.subscribe(queue, function(d) {
+			var numberToCall = d.body;
+			console.log(numberToCall);
+			
+			$("#numToCall").html(numberToCall);
+			showModal();
+		}/*, {"auto-delete": true, "exchange": "spring-boot-exchanger"}*/);
+	};
+	var on_error =  function() {
+		console.log('error');
+	};
+	
+	client.connect('guest', 'guest', on_connect, on_error, '/');
+    
 });
 
 
 function showModal() {
+	$('#calling-modal').modal('show');
+	
     setTimeout(function () {
-        $('#calling-modal').modal('show');
         hideModal();
-    }, 4000)
+    }, 3000)
 }
+
 
 
 function hideModal() {
-    setTimeout(function () {
-        $('#calling-modal').modal('hide');
-
-        showModal();
-    }, 5000)
+	$('#calling-modal').modal('hide');
 }
-
 
 

@@ -1,6 +1,7 @@
 package com.withBoardManager.receiver;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.apache.commons.cli.*;
 import org.springframework.amqp.core.AmqpAdmin;
@@ -25,6 +26,16 @@ public class ReceiverApplication {
 	public static String ipServer;
 	public static ArrayList<String> services = new ArrayList<>();
 
+	/* For the random queue name */
+	public static String generateString(Random rng, String characters, int length)
+	{
+	    char[] text = new char[length];
+	    for (int i = 0; i < length; i++)
+	    {
+	        text[i] = characters.charAt(rng.nextInt(characters.length()));
+	    }
+	    return new String(text);
+	}
 	
 	public static void addServices(String service) {
 		services.add(service);
@@ -63,14 +74,16 @@ public class ReceiverApplication {
 
 	@Bean
 	Queue queue() {
-		return amqpAdmin().declareQueue();
+		Queue randomQueue = new Queue("receiver."+ generateString(new Random(), 
+				"ABCDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmopqrstuvwxyz", 12));
+		amqpAdmin().declareQueue(randomQueue);
+		return randomQueue;
 	}
 
 	@Bean
 	TopicExchange exchange() {
 		return new TopicExchange("spring-boot-exchanger");
 	}
-	
 	
 	@Bean
 	Binding binding(ArrayList<String> servicesNames) {
@@ -95,6 +108,7 @@ public class ReceiverApplication {
 
 	@Bean
 	MessageListenerAdapter listenerAdapter(com.withBoardManager.receiver.SpringReceiver receiver) {
+		receiver.setQueueForUI(queue());
 		return new MessageListenerAdapter(receiver, "receiveMessage");
 	}
 	
