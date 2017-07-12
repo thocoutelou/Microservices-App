@@ -79,9 +79,10 @@ public class ReceiverApplication {
 		Queue randomQueue = new Queue("receiver."+ generateString(new Random(), 
 				"ABCDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmopqrstuvwxyz", 12));
 		amqpAdmin().declareQueue(randomQueue);
+		SpringReceiver.setQueueForUI(randomQueue);
 		return randomQueue;
 	}
-
+/*
 	@Bean
 	TopicExchange exchange() {
 		return new TopicExchange("spring-boot-exchanger");
@@ -113,7 +114,7 @@ public class ReceiverApplication {
 		receiver.setQueueForUI(queue());
 		return new MessageListenerAdapter(receiver, "receiveMessage");
 	}
-	
+	*/
 	/********************/
 	/****MAIN METHOD*****/
 	/********************/

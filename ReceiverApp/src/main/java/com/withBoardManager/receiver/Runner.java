@@ -16,31 +16,22 @@ public class Runner implements CommandLineRunner {
 
 	@SuppressWarnings("unused")
 	private final SpringReceiver reciever;
-	private final ConfigurableApplicationContext context;
 
-	public Runner(SpringReceiver receiver, RabbitTemplate rabbitTemplate, ConfigurableApplicationContext context) {
+	public Runner(SpringReceiver receiver, RabbitTemplate rabbitTemplate) {
 		this.reciever = receiver;
 		this.rabbitTemplate = rabbitTemplate;
-		this.context = context;
 	}
 
 	public void run(String... args) throws Exception {
 
-		Scanner sc = new Scanner(System.in);
-
+		while(true) {
 		/* For the Receiver Mode */
 		System.out.println("---- Ready to recieve messages from the Manager ----");
-		System.out.println("To quit, enter <QUIT>");
 		while (true) {
 			TimeUnit.MILLISECONDS.sleep(100);
-			String message = sc.nextLine();
-			if (message.equals("QUIT"))
-				break;
+			
+			}
 		}
-
-		context.close();
-		sc.close();
-
 	}
 
 }
