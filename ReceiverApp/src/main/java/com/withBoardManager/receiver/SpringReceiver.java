@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class SpringReceiver {
 
 	private Queue queue;
-	private ModelMap model=new ModelMap(); 	
+	private ModelMap model=new ModelMap();
 	
 	public void setQueueForUI(Queue queueForUI) {
 		this.queue=queueForUI;
@@ -38,7 +38,7 @@ public class SpringReceiver {
     public ModelMap index() {
     	model.addAttribute("queue",queue.getName());
     	return model;
-    }
+    }	
     
     
 }
