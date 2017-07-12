@@ -48,6 +48,8 @@ public class ReceiverApplication {
 		return services;
 	}
 	
+	
+	
 	/*initiate beans*/
 	@Bean
 	public ArrayList<String> services(){
