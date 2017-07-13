@@ -13,10 +13,10 @@ public class Runner implements CommandLineRunner {
 	private final RabbitTemplate rabbitTemplate;
 
 	@SuppressWarnings("unused")
-	private final SpringReceiver reciever;
+	private final IndexController iController;
 
-	public Runner(SpringReceiver receiver, RabbitTemplate rabbitTemplate) {
-		this.reciever = receiver;
+	public Runner(IndexController controller, RabbitTemplate rabbitTemplate) {
+		this.iController = controller;
 		this.rabbitTemplate = rabbitTemplate;
 	}
 

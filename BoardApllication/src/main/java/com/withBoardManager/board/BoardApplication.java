@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 public class BoardApplication {
 
 	
+	public static String IpManager;
 	
 	public static String ipServer;
 	public static ArrayList<String> services = new ArrayList<>();
@@ -43,14 +44,19 @@ public class BoardApplication {
 
 	public static void setIpServer(String ipServer) {
 		BoardApplication.ipServer = ipServer;
-		SpringReceiver.setIpServer(ipServer);
+		IndexController.setIpServer(ipServer);
 	}
+	public static void setIpManager(String ipManager) {
+		IpManager = ipManager;
+		IndexController.setIpServer(ipManager);
+	}	
+
 	static ArrayList<String> getNamesServices() {
 		return services;
 	}
 	
 	
-	
+	/*TODO remove all the useless variables*/
 	/*initiate beans*/
 	@Bean
 	public ArrayList<String> services(){
@@ -80,7 +86,7 @@ public class BoardApplication {
 		Queue randomQueue = new Queue("receiver."+ generateString(new Random(), 
 				"ABCDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmopqrstuvwxyz", 12));
 		amqpAdmin().declareQueue(randomQueue);
-		SpringReceiver.setQueueForUI(randomQueue);
+		//SpringReceiver.setQueueForUI(randomQueue);
 		return randomQueue;
 	}
 
@@ -111,8 +117,8 @@ public class BoardApplication {
 	
 
 	@Bean
-	MessageListenerAdapter listenerAdapter(com.withBoardManager.board.SpringReceiver receiver) {
-		SpringReceiver.setQueueForUI(queue());
+	MessageListenerAdapter listenerAdapter(com.withBoardManager.board.IndexController receiver) {
+		//SpringReceiver.setQueueForUI(queue());
 		return new MessageListenerAdapter(receiver, "receiveMessage");
 	}
 	
@@ -130,14 +136,9 @@ public class BoardApplication {
 		options.addOption(ipServer);
 		
 
-		/* a different constructor to give more arguments to an option */
-		@SuppressWarnings({ "deprecation", "static-access" })
-		Option services = OptionBuilder.withArgName("ServicesNames for sending").withValueSeparator(' ').hasArgs(1).hasOptionalArgs()
-				.withLongOpt("servicesToSent").withDescription("Name of the services which will receive the messages")
-				.create('s');
-		services.setRequired(true);
-		options.addOption(services);
-
+		Option ipManager =new Option("m","ipManager",true,"IP of the boardManager");
+		ipManager.setRequired(true);
+		options.addOption(ipManager);
 		
 		
 
@@ -160,16 +161,7 @@ public class BoardApplication {
 		//////////////////////////////////////////////////
 
 		setIpServer(cmd.getOptionValue("ipServer"));
-		int i=0;
-		try {
-			while ((cmd.getOptionValues("servicesToSent")[i] != null)) {
-				addServices(cmd.getOptionValues("servicesToSent")[i]);
-				i++;
-			}
-		} catch (Exception e) {
-			System.out.println(getNamesServices().toString());
-
-		}
+		setIpManager(cmd.getOptionValue("ipManager"));
 		
 
 		/* Launch the Spring-boot application */
