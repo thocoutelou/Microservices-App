@@ -43,6 +43,7 @@ public class ReceiverApplication {
 
 	public static void setIpServer(String ipServer) {
 		ReceiverApplication.ipServer = ipServer;
+		SpringReceiver.setIpServer(ipServer);
 	}
 	static ArrayList<String> getNamesServices() {
 		return services;
@@ -82,7 +83,7 @@ public class ReceiverApplication {
 		SpringReceiver.setQueueForUI(randomQueue);
 		return randomQueue;
 	}
-/*
+
 	@Bean
 	TopicExchange exchange() {
 		return new TopicExchange("spring-boot-exchanger");
@@ -111,10 +112,10 @@ public class ReceiverApplication {
 
 	@Bean
 	MessageListenerAdapter listenerAdapter(com.withBoardManager.receiver.SpringReceiver receiver) {
-		receiver.setQueueForUI(queue());
+		SpringReceiver.setQueueForUI(queue());
 		return new MessageListenerAdapter(receiver, "receiveMessage");
 	}
-	*/
+	
 	/********************/
 	/****MAIN METHOD*****/
 	/********************/
