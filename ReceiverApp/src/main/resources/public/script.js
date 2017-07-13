@@ -7,13 +7,16 @@ $(document).ready(function () {
         $('.modal-dialog').velocity('transition.' + open);
     });
 	
-	var ws = new WebSocket('ws://192.168.12.252:15674/ws');
+    var elementServer=document.getElementById("ipserver");
+	var server=elementServer.getAttribute("name");
+    
+	var ws = new WebSocket('ws://'+server+':15674/ws');
 	var client = Stomp.over(ws);
 	
 	var on_connect = function() {
 		console.log('connected');
 		var element=document.getElementById("queue");
-		var queue=element.getAttribute("name")
+		var queue=element.getAttribute("name");
 		console.log(name);
 		client.subscribe(queue, function(d) {
 			var numberToCall = d.body;
