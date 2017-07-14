@@ -15,6 +15,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.apache.commons.cli.*;
 
@@ -25,25 +26,38 @@ public class ManagerBoardApplication {
 	public static String httpServer;
 	public static ArrayList<String> prefix = new ArrayList<>();
 	public static ArrayList<String> serviceToSent = new ArrayList<>();
-	public static int START = 1;
-	public static int END = 10;
+	public static int start = 1;
+	public static int end = 10;
 	public static String serviceForReceiving;
+	public static String data;
+	public static String pathToData;
+	private static AmqpAdmin amqpAdmin;
+	private static ConnectionFactory connectFactory;
+	
+	/* For the random queue name */
+	public static String generateString(Random rng, String characters, int length)
+	{
+	    char[] text = new char[length];
+	    for (int i = 0; i < length; i++)
+	    {
+	        text[i] = characters.charAt(rng.nextInt(characters.length()));
+	    }
+	    return new String(text);
+	}
+	
 
 	/* Get and set methods */
 	static ArrayList<String> getNamesServicesToSent() {
 		return serviceToSent;
 	}
 
-	static ArrayList<String> getPrefix() {
-		return prefix;
+
+	public static void setEND(int nend) {
+		end = nend;
 	}
 
-	public static void setEND(int eND) {
-		END = eND;
-	}
-
-	public static void setSTART(int sTART) {
-		START = sTART;
+	public static void setSTART(int nstart) {
+		start = nstart;
 	}
 
 	public static void addServiceToSent(String serviceToSent) {
@@ -68,58 +82,64 @@ public class ManagerBoardApplication {
 
 	/* Beans creation */
 
-	@Bean
-	public static String serviceForReceiving() {
+	public static String getServiceForReceiving() {
 		return serviceForReceiving;
 	}
 
-	@Bean
-	public ArrayList<String> serviceToSent() {
+	public static ArrayList<String> getServiceToSent() {
 		return serviceToSent;
 	}
-
-	@Bean
-	public ArrayList<String> prefix() {
+	
+	/*specify the prefix of the services*/
+	public static ArrayList<String> getPrefix() {
 		return prefix;
 	}
 
 	/* ip or URL of the server RabbitMQ */
-	@Bean
-	public String ipServer() {
+	public static String getIpServer() {
 		return (ipServer);
 	}
 
 	/* URL of the http server */
-	@Bean
-	public String httpServer() {
+	public static String getHttpServer() {
 		return (httpServer);
 	}
 
 	/* for simulate the randomized inputs */
-	@Bean
-	public int START() {
-		return (START);
+	
+	public static int START() {
+		return (start);
 	}
 
 	/* for simulate the randomized inputs */
-	@Bean
-	public int END() {
-		return (END);
+	
+	public static int END() {
+		return (end);
 	}
 
+	public static String getPathToData() {
+		return pathToData;
+	}
+
+
+	public static void setPathToData(String pathToData) {
+		ManagerBoardApplication.pathToData = pathToData;
+	}
 	/*
-	 * Bean for the RabbitMq service for more details, see the web site
+	 * Bean for the RabbitMq service; for more details, see the web site
 	 */
 
 	@Bean
 	/* Good way to parse argument */
 	public ConnectionFactory connectionFactory() {
-		return new CachingConnectionFactory(ipServer);
+		connectFactory= new CachingConnectionFactory(ipServer);
+		return connectFactory;
 	}
 
 	@Bean
 	public AmqpAdmin amqpAdmin() {
-		return new RabbitAdmin(connectionFactory());
+		amqpAdmin=new RabbitAdmin(connectionFactory());
+		return amqpAdmin;
 	}
 
 	@Bean
@@ -138,6 +158,7 @@ public class ManagerBoardApplication {
 	}
 
 	@Bean
+	static
 	TopicExchange exchangeForSending() {
 		return new TopicExchange("spring-boot-exchanger");
 	}
@@ -145,7 +166,7 @@ public class ManagerBoardApplication {
 	@Bean
 	Binding binding() {
 		System.out.println(serviceForReceiving);
-		Binding b = BindingBuilder.bind(queue()).to(exchange()).with(serviceForReceiving());
+		Binding b = BindingBuilder.bind(queue()).to(exchange()).with(getServiceForReceiving());
 		return b;
 	}
 
@@ -164,6 +185,20 @@ public class ManagerBoardApplication {
 		return new MessageListenerAdapter(receiver, "receiveMessage");
 	}
 
+	
+	
+	public static String createAndConfigureQueue(ArrayList<String>services) {
+		Queue randomQueue = new Queue("receiver."+ generateString(new Random(), 
+				"ABCDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmopqrstuvwxyz", 12));
+		amqpAdmin.declareQueue(randomQueue);
+		@SuppressWarnings("unused")
+		Binding b =BindingBuilder.bind(randomQueue).to(exchangeForSending()).with(services.get(0));
+		for (int i=1;i<services.size();i++){
+			amqpAdmin.declareBinding(BindingBuilder.bind(randomQueue).to(exchangeForSending()).with(services.get(i)));
+		}
+		return randomQueue.getName();
+	}
+	
 	/////////////////
 	/* MAIN METHOD */
 	/////////////////
@@ -180,6 +215,10 @@ public class ManagerBoardApplication {
 		Option httpServer = new Option("h", "httpServer", true, "Ip or url of the http server");
 		httpServer.setRequired(true);
 		options.addOption(httpServer);
+		
+		Option data = new Option("d", "data", true, "Path to the Json data");
+		data.setRequired(true);
+		options.addOption(data);
 
 		Option serviceForReceiving = new Option("s", "serviceForReceiving", true,
 				"Name of the service for receiving message from terminalCall");
@@ -260,9 +299,11 @@ public class ManagerBoardApplication {
 		if (cmd.getOptionValue("start") != null) {
 			setSTART(Integer.parseInt(cmd.getOptionValue("start")));
 		}
-
+		setPathToData(cmd.getOptionValue("data"));
+		
+		RedirectController.configureData(getPathToData());
 		/* Launch the Spring-boot application */
-		new SpringApplicationBuilder(ManagerBoardApplication.class).web(false).run(args);
+		new SpringApplicationBuilder(ManagerBoardApplication.class).web(true).run(args);
 	}
 
 }

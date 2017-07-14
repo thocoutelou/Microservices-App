@@ -51,16 +51,14 @@ public class IndexController {
     	RestTemplate restTemplate = new RestTemplate();
     	//Get the ip of the client
     	String ipSource = request.getRemoteAddr();
-    	String bmUrl= "http://"+ipManager+"/8080/queue?ip="+ipSource;
+    	System.out.println(ipSource);
+    	String bmUrl= "http://"+ipManager+":8080/queue?ip="+ipSource;
     	//GET the queueName
     	ResponseEntity<String> response
     	  = restTemplate.getForEntity( bmUrl, String.class);
-    	//Find the queue parameter in the JSON
-    	ObjectMapper mapper = new ObjectMapper();
-    	JsonNode root = mapper.readTree(response.getBody());
-    	JsonNode queue= root.path("queue");
+    	String queue = (String)response.getBody();
     	
-    	model.addAttribute("queue",queue.asText());
+    	model.addAttribute("queue",queue);
     	model.addAttribute("ipserver", ipServer);
     	
     	return model;

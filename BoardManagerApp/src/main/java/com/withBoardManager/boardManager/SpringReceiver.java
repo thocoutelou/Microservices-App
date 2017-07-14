@@ -18,7 +18,7 @@ public class SpringReceiver {
 
 	public void receiveMessage(String message) throws Exception {
 
-		String urlToRead = (String) context.getBean("httpServer");
+		String urlToRead = ManagerBoardApplication.getHttpServer();
 		// System.out.println(urlToRead);
 
 		System.out.println("Received <" + message + ">");

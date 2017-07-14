@@ -48,7 +48,7 @@ public class BoardApplication {
 	}
 	public static void setIpManager(String ipManager) {
 		IpManager = ipManager;
-		IndexController.setIpServer(ipManager);
+		IndexController.setIpManager(ipManager);
 	}	
 
 	static ArrayList<String> getNamesServices() {
@@ -68,9 +68,9 @@ public class BoardApplication {
 		return (ipServer);
 	}
 	
-	
+/*	
 	@Bean
-	/* Good way to parse argument */
+	/* Good way to parse argument *
 	public ConnectionFactory connectionFactory() {
 		return new CachingConnectionFactory(ipServer);
 	}
@@ -113,15 +113,17 @@ public class BoardApplication {
 		container.setMessageListener(listenerAdapter);
 		return container;
 	}
+	*/
 	
 	
-
+	
+/*
 	@Bean
 	MessageListenerAdapter listenerAdapter(com.withBoardManager.board.IndexController receiver) {
 		//SpringReceiver.setQueueForUI(queue());
 		return new MessageListenerAdapter(receiver, "receiveMessage");
 	}
-	
+	*/
 	/********************/
 	/****MAIN METHOD*****/
 	/********************/
