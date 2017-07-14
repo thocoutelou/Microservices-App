@@ -54,8 +54,7 @@ public class IndexController {
     	System.out.println(ipSource);
     	String bmUrl= "http://"+ipManager+":8080/queue?ip="+ipSource;
     	//GET the queueName
-    	ResponseEntity<String> response
-    	  = restTemplate.getForEntity( bmUrl, String.class);
+    	ResponseEntity<String> response = restTemplate.getForEntity( bmUrl, String.class);
     	String queue = (String)response.getBody();
     	
     	model.addAttribute("queue",queue);
