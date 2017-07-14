@@ -24,7 +24,7 @@ public class Runner implements CommandLineRunner {
 
 		while(true) {
 		/* For the Receiver Mode */
-		System.out.println("---- Ready to recieve messages from the Manager ----");
+		System.out.println("---- Ready for forward request to the BoardManager ----");
 		while (true) {
 			TimeUnit.MILLISECONDS.sleep(100);
 			
