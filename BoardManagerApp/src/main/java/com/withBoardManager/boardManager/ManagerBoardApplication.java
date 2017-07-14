@@ -31,6 +31,7 @@ public class ManagerBoardApplication {
 	public static String serviceForReceiving;
 	public static String data;
 	public static String pathToData;
+	private static TopicExchange exchangeForSendind;
 	private static AmqpAdmin amqpAdmin;
 	private static ConnectionFactory connectFactory;
 	
@@ -160,7 +161,8 @@ public class ManagerBoardApplication {
 	@Bean
 	static
 	TopicExchange exchangeForSending() {
-		return new TopicExchange("spring-boot-exchanger");
+		exchangeForSendind=new TopicExchange("spring-boot-exchanger");
+		return exchangeForSendind ;
 	}
 
 	@Bean
@@ -186,16 +188,15 @@ public class ManagerBoardApplication {
 	}
 
 	
-	
 	public static String createAndConfigureQueue(ArrayList<String>services) {
 		Queue randomQueue = new Queue("receiver."+ generateString(new Random(), 
 				"ABCDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmopqrstuvwxyz", 12));
 		amqpAdmin.declareQueue(randomQueue);
-		@SuppressWarnings("unused")
-		Binding b =BindingBuilder.bind(randomQueue).to(exchangeForSending()).with(services.get(0));
-		for (int i=1;i<services.size();i++){
-			amqpAdmin.declareBinding(BindingBuilder.bind(randomQueue).to(exchangeForSending()).with(services.get(i)));
+		amqpAdmin.declareBinding(BindingBuilder.bind(randomQueue).to(exchangeForSendind).with(services.get(0)));
+		for (int i=0;i<services.size();i++){
+			amqpAdmin.declareBinding(BindingBuilder.bind(randomQueue).to(exchangeForSendind).with(services.get(i)));
 		}
+		
 		return randomQueue.getName();
 	}
 	
