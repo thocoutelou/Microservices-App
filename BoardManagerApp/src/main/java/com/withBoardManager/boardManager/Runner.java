@@ -46,13 +46,12 @@ public class Runner implements CommandLineRunner {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(String... args) throws Exception {
 
 		/* For the Receiver Mode */
 		System.out.println("---- Ready to receive event----");
-		ArrayList<String> servicesManaged = ((ArrayList<String>) context.getBean("serviceToSent"));
-		setPrefix((ArrayList<String>) context.getBean("prefix"));
+		ArrayList<String> servicesManaged = (ManagerBoardApplication.getNamesServicesToSent());
+		setPrefix(ManagerBoardApplication.getPrefix());
 		while (true) {
 			TimeUnit.MILLISECONDS.sleep(250);
 			/* For sending response */
