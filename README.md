@@ -28,9 +28,9 @@ there is one new app, the Board App, with one web server for all the board. So o
 board, there is only a Web Browser to establish a STOMP connection with the right 
 queue.
 
-|		  REST		  Http
-|   BoardManager -----> BoardApp <------ Boards
-|		 <-----
+*		  REST		  Http
+*   BoardManager -----> BoardApp <------ Boards
+*		 <-----
 
 
 
@@ -40,13 +40,13 @@ queue.
 A more complex architecture with a server Web (counting Manager) and a Board Manager.
 Every App is deployed in a Docker container in the same network.
 
-|
-|Publisher			 ---->Board1
-|	\			/
-|	 -----> BoardManager -------->Board2		(RabbitMQ server)
-|	/		|       \
-|Publisher		v	 ---->Board3
-|		CountingManager
+*
+*Publisher			 ---->Board1
+*	\			/
+*	 -----> BoardManager -------->Board2		(RabbitMQ server)
+*	/		|       \
+*Publisher		v	 ---->Board3
+*		CountingManager
 
 1) The communication between the publishers and the BoardManager are managed by the 
 RabbitMQ server by AMQP. 
@@ -66,13 +66,13 @@ Here we send messages to a service (a rootingKey):
 				
 
 
-|			       -> Client1 {ServiceA}
-|			      /
-|			     /
-|Publisher ---#ServiceA---> MessageBroker ---> Client2 {ServiceA, ServiceB}
-|			     \
-|			      \
-|			       -> Client3{ServiceB}
+*			       -> Client1 {ServiceA}
+*			      /
+*			     /
+*Publisher ---#ServiceA---> MessageBroker ---> Client2 {ServiceA, ServiceB}
+*			     \
+*			      \
+*			       -> Client3{ServiceB}
 
 
 
