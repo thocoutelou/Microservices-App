@@ -65,6 +65,7 @@ public class WebApplication {
 		} catch (Exception e) {
 			setNumberOfServices(getServiceToSent().size());
 		}
+		
 		System.out.println("Starting Web Server...");
 		SpringApplication.run(WebApplication.class, args);
 		/**
