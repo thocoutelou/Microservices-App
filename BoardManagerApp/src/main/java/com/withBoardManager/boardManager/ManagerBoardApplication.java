@@ -168,7 +168,7 @@ public class ManagerBoardApplication {
 	@Bean
 	Binding binding() {
 		System.out.println(serviceForReceiving);
-		Binding b = BindingBuilder.bind(queue()).to(exchange()).with(getServiceForReceiving());
+		Binding b = BindingBuilder.bind(queue()).to(exchange()).with("CallForBoardManager");
 		return b;
 	}
 
@@ -221,10 +221,12 @@ public class ManagerBoardApplication {
 		data.setRequired(true);
 		options.addOption(data);
 
+		/*
 		Option serviceForReceiving = new Option("s", "serviceForReceiving", true,
 				"Name of the service for receiving message from terminalCall");
 		serviceForReceiving.setRequired(true);
 		options.addOption(serviceForReceiving);
+		 */
 
 		/* a different constructor to give more arguments to an option */
 		@SuppressWarnings({ "deprecation", "static-access" })
@@ -272,7 +274,7 @@ public class ManagerBoardApplication {
 
 		setIpServer(cmd.getOptionValue("ipServer"));
 		sethttpServer(cmd.getOptionValue("httpServer"));
-		setServiceForReceiving(cmd.getOptionValue("serviceForReceiving"));
+		setServiceForReceiving("CallForBoardManager");
 
 		int i = 0;
 		try {

@@ -2,6 +2,7 @@ package com.withBoardManager.boardManager;
 
 import java.util.concurrent.CountDownLatch;
 
+import org.apache.http.conn.util.InetAddressUtils;
 import org.json.JSONObject;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 public class SpringReceiver {
 
 	private CountDownLatch latch = new CountDownLatch(1);
+	@SuppressWarnings("unused")
 	private final ConfigurableApplicationContext context;
 
 	public SpringReceiver(ConfigurableApplicationContext context) {
@@ -23,15 +25,16 @@ public class SpringReceiver {
 
 		System.out.println("Received <" + message + ">");
 
-		if (message.equals("Event")) {
-			String result = HTTPrequest.getHTML("http://" + urlToRead + ":8080/event");
+		//if (InetAddressUtils.isIPv4Address(message)) {
+			String result = HTTPrequest.getHTML("http://" + urlToRead + ":8088/event?"+message);
 			JSONObject json = new JSONObject(result);
+			System.out.println("The Web Counting server has sent: " + json.toString());
 			((HttpResponse) context.getBean("httpResponse")).setResponse((String) json.get("service"));
 			((HttpResponse) context.getBean("httpResponse")).setCount((int) json.get("count"));
 			((HttpResponse) context.getBean("httpResponse")).setNew(true);
-			System.out.println("The server has sent: " + ((HttpResponse) context.getBean("httpResponse")).getResponse()
-					+ " with the counter: " + ((HttpResponse) context.getBean("httpResponse")).getCount());
-		}
+			System.out.println(">>>Sending to TcallApp...");
+			Runner.sendToTcall(json);
+		//}
 		latch.countDown();
 
 	}

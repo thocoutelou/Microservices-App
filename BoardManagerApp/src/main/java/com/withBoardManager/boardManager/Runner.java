@@ -3,6 +3,8 @@ package com.withBoardManager.boardManager;
 import java.util.ArrayList;
 
 import java.util.concurrent.TimeUnit;
+
+import org.json.JSONObject;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -11,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Runner implements CommandLineRunner {
 
-	private final RabbitTemplate rabbitTemplate;
+	private static RabbitTemplate rabbitTemplate;
 	private ArrayList<String> prefix;
 
 	public ArrayList<String> getPrefix() {
@@ -28,7 +30,7 @@ public class Runner implements CommandLineRunner {
 
 	public Runner(SpringReceiver receiver, RabbitTemplate rabbitTemplate, ConfigurableApplicationContext context) {
 		this.reciever = receiver;
-		this.rabbitTemplate = rabbitTemplate;
+		Runner.rabbitTemplate = rabbitTemplate;
 		this.context = context;
 	}
 
@@ -45,7 +47,11 @@ public class Runner implements CommandLineRunner {
 			return (service + input);
 		}
 	}
-
+	public static void sendToTcall(JSONObject json) {
+		rabbitTemplate.convertAndSend("sb-boardManager-exchange","ReceiveForBoardManager",json.toString());
+	}
+	
+	
 	public void run(String... args) throws Exception {
 
 		/* For the Receiver Mode */
