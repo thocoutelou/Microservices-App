@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -39,11 +40,12 @@ public class EventController {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/event")
-	public Event event() {
+	public Event event(@RequestParam(value="ip")String ip,@RequestParam(value="service")String service) {
 		HashMap<String, Integer> map = ((HashMap<String, Integer>) context.getBean("serviceToSent"));
 		String key = minInHashMap(map);
 		int value = map.get(key);
-		Event response = new Event(key,value+1);
+		TcallTicket ticket= new TcallTicket(ip, service, value+1);
+		Event response = new Event(key,value+1,ticket);
 		((HashMap<String, Integer>) context.getBean("serviceToSent")).put(key, value + 1);
 		return (response);
 	}
