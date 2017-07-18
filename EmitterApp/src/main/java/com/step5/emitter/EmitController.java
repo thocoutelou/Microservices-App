@@ -1,4 +1,4 @@
-package com.step5.tcall;
+package com.step5.emitter;
 
 import java.util.concurrent.TimeUnit;
 
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class CallController {
+public class EmitController {
 
 	public static JSONObject jsonResponse = null;
 
@@ -20,17 +20,17 @@ public class CallController {
 
 	@RequestMapping("/")
 	public String home() {
-		return "Hello! \n" + "This app is used by a terminal call to send an event to the BoardManager. \n"
-				+ "Please use the browser of a terminal call to make your request with the route '/event?service=' with the service you want to call";
+		return "Hello! \n" + "This app is used by a Kiosk to asks for a new ticket. \n"
+				+ "Please use the browser of a terminal call to make your request with the route '/ticket?service=' with the service you want.";
 	}
 
-	@RequestMapping("/event")
+	@RequestMapping("/ticket")
 	public String event(HttpServletRequest request, @RequestParam(value = "service") String service)
 			throws InterruptedException {
 		// Get the ip of the client
 		String ipSource = request.getRemoteAddr();
 		System.out.println("Request from: " + ipSource + " for the service:" + service);
-		Runner.sendEvent("event?ip=" + ipSource + "&service=" + service);
+		Runner.sendEvent("ticket?ip=" + ipSource + "&service=" + service);
 		while (jsonResponse == null) {
 			TimeUnit.MILLISECONDS.sleep(50);
 		}

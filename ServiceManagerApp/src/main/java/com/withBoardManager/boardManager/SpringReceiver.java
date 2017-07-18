@@ -25,7 +25,7 @@ public class SpringReceiver {
 		System.out.println("Received < " + message + " >");
 
 		//TODO Change the port
-		String result = HTTPrequest.getHTML("http://" + urlToRead + ":8088/event?" + message);
+		String result = HTTPrequest.getHTML("http://" + urlToRead + ":8088/" + message);
 		JSONObject json = new JSONObject(result);
 		System.out.println("The Web Counting server has sent: " + json.toString());
 		
@@ -34,7 +34,7 @@ public class SpringReceiver {
 		((HttpResponse) context.getBean("httpResponse")).setCount((int) json.get("count"));
 		((HttpResponse) context.getBean("httpResponse")).setNew(true);
 		
-		/* For the Tcall */
+		/* For the Tcall & Kiosk */
 		JSONObject jsonTicket = ((JSONObject) json.get("ticket"));
 		jsonTicket.put("id", Runner.compactAnswer(jsonTicket.getInt("ticketNumber"),
 				jsonTicket.get("service").toString(), Runner.getServicedManaged().indexOf(jsonTicket.get("service"))));

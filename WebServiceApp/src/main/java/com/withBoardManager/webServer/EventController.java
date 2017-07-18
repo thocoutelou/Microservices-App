@@ -1,7 +1,6 @@
 package com.withBoardManager.webServer;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,36 +16,28 @@ public class EventController {
 		context = cont;
 	}
 
-	@SuppressWarnings("rawtypes")
-	public static String minInHashMap(HashMap<String, Integer> map) {
-		Iterator it = map.keySet().iterator();
-		/* for the first value */
-		if (it.hasNext()) {
-			String keyOfTheMin = (String) it.next();
-			int min = map.get(keyOfTheMin);
-			while (it.hasNext()) {
-				String key = (String) it.next();
-				int val = map.get(key);
-				if (val <= min) {
-					keyOfTheMin = key;
-					min = val;
-				}
-			}
-			return keyOfTheMin;
-		} else {
-			return ("No service");
-		}
-	}
 
+
+	/* Response for Call. send a json with all the informations */
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/event")
-	public Event event(@RequestParam(value="ip")String ip,@RequestParam(value="service")String service) {
-		HashMap<String, Integer> map = ((HashMap<String, Integer>) context.getBean("serviceToSent"));
-		String key = minInHashMap(map);
-		int value = map.get(key);
-		TcallTicket ticket= new TcallTicket(service, value+1);
-		Event response = new Event(key,value,ticket);
-		((HashMap<String, Integer>) context.getBean("serviceToSent")).put(key, value + 1);
+	public Event event(@RequestParam(value = "ip") String ip, @RequestParam(value = "service") String service) {
+		int value = ((HashMap<String, CounterOfService>) context.getBean("serviceToSent")).get(service).getCounterLastCalled();
+		Event response = new Event(service, value);
+		((HashMap<String, CounterOfService>) context.getBean("serviceToSent")).get(service).popNextTicket();
 		return (response);
+	}
+
+	
+	/* Create a new ticket */
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/ticket")
+	public TcallTicket ticket(@RequestParam(value = "service")String service) {
+		int ticketNumber = ((HashMap<String, CounterOfService>) context.getBean("serviceToSent"))
+				.get(service).getCounterLastCreated()+1;
+		TcallTicket ticketToSend = new TcallTicket(service, ticketNumber);
+		((HashMap<String, CounterOfService>) context.getBean("serviceToSent")).get(service).addTicket(ticketToSend);
+		return ticketToSend;
+		
 	}
 }
