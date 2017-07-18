@@ -16,28 +16,32 @@ public class EventController {
 		context = cont;
 	}
 
-
-
 	/* Response for Call. send a json with all the informations */
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/event")
 	public Event event(@RequestParam(value = "ip") String ip, @RequestParam(value = "service") String service) {
-		int value = ((HashMap<String, CounterOfService>) context.getBean("serviceToSent")).get(service).getCounterLastCalled();
-		Event response = new Event(service, value);
-		((HashMap<String, CounterOfService>) context.getBean("serviceToSent")).get(service).popNextTicket();
-		return (response);
+		int value = ((HashMap<String, CounterOfService>) context.getBean("serviceToSent")).get(service)
+				.getCounterLastCalled();
+		if (((HashMap<String, CounterOfService>) context.getBean("serviceToSent"))
+				.get(service).popNextTicket() == -1) {
+			System.out.println("No more tickets for this service");
+			Event response = new Event("No more ticket for the service: " + service, -1);
+			return response;
+		} else {
+			Event response = new Event(service, value);
+			return (response);
+		}
 	}
 
-	
 	/* Create a new ticket */
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/ticket")
-	public TcallTicket ticket(@RequestParam(value = "service")String service) {
-		int ticketNumber = ((HashMap<String, CounterOfService>) context.getBean("serviceToSent"))
-				.get(service).getCounterLastCreated()+1;
+	public TcallTicket ticket(@RequestParam(value = "service") String service) {
+		int ticketNumber = ((HashMap<String, CounterOfService>) context.getBean("serviceToSent")).get(service)
+				.getCounterLastCreated() + 1;
 		TcallTicket ticketToSend = new TcallTicket(service, ticketNumber);
 		((HashMap<String, CounterOfService>) context.getBean("serviceToSent")).get(service).addTicket(ticketToSend);
 		return ticketToSend;
-		
+
 	}
 }

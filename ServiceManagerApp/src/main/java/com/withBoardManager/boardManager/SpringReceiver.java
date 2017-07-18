@@ -24,22 +24,32 @@ public class SpringReceiver {
 
 		System.out.println("Received < " + message + " >");
 
-		//TODO Change the port
+		// TODO Change the port
 		String result = HTTPrequest.getHTML("http://" + urlToRead + ":8088/" + message);
 		JSONObject json = new JSONObject(result);
 		System.out.println("The Web Counting server has sent: " + json.toString());
-		
-		/* For the boards */
-		((HttpResponse) context.getBean("httpResponse")).setResponse((String) json.get("service"));
-		((HttpResponse) context.getBean("httpResponse")).setCount((int) json.get("count"));
-		((HttpResponse) context.getBean("httpResponse")).setNew(true);
-		
-		/* For the Tcall & Kiosk */
-		JSONObject jsonTicket = ((JSONObject) json.get("ticket"));
-		jsonTicket.put("id", Runner.compactAnswer(jsonTicket.getInt("ticketNumber"),
-				jsonTicket.get("service").toString(), Runner.getServicedManaged().indexOf(jsonTicket.get("service"))));
-		System.out.println(">>> Sending to TcallApp...");
-		return jsonTicket.toString();
+		if (json.getBoolean("acall")) {
+			/* For the Tcall & boards */
+			if (!ServiceManagerApplication.serviceToSent.contains(json.get("service"))){
+				/*There are no ticket for this service*/
+				return "{\"error\":\" The service is not avaliable\" }";
+			}
+			((HttpResponse) context.getBean("httpResponse")).setResponse((String) json.get("service"));
+			
+			((HttpResponse) context.getBean("httpResponse")).setCount((int) json.get("count"));
+			/*Launch the http Response*/
+			((HttpResponse) context.getBean("httpResponse")).setNew(true);
+			json.put("id",
+					Runner.compactAnswer(json.getInt("count"), json.get("service").toString(),
+							Runner.getServicedManaged().indexOf(json.get("service"))));
+			System.out.println(">>> Sending to TcallApp...");
+			return json.toString();
+		} else {
+			/* For the Kiosk */
+			System.out.println(">>> Sending to EmitterApp (kiosk) ...");
+			System.out.println("The ticket:" +json.toString());
+			return json.toString();
+		}
 
 	}
 
