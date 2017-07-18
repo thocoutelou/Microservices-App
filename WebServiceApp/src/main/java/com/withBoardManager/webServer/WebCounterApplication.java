@@ -9,10 +9,10 @@ import org.apache.commons.cli.*;
 @SpringBootApplication
 public class WebCounterApplication {
 
-	public static HashMap<String, Integer> serviceToSent = new HashMap<String, Integer>();
+	public static HashMap<String, CounterOfService> serviceToSent = new HashMap<String, CounterOfService>();
 	public static int numberOfServices;
 
-	public static HashMap<String, Integer> getServiceToSent() {
+	public static HashMap<String, CounterOfService> getServiceToSent() {
 		return serviceToSent;
 	}
 
@@ -21,11 +21,11 @@ public class WebCounterApplication {
 	}
 
 	private static void addServiceToSent(String service) {
-		serviceToSent.put(service, 0);
+		serviceToSent.put(service, new CounterOfService());
 	}
 
 	@Bean
-	public HashMap<String, Integer> serviceToSent() {
+	public HashMap<String, CounterOfService> serviceToSent() {
 		return serviceToSent;
 	}
 

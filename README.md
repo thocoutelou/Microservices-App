@@ -43,9 +43,9 @@ Every App is deployed in a Docker container in the same network.
 
 
  	Publisher                       ----> Board1
-		     \                      /
+      \                      /
           -----> BoardManager --------> Board2         (RabbitMQ server)
-		     /           |          \
+		  /           |          \
  	Publisher          v            ----> Board3
             	CountingManager
 
