@@ -2,8 +2,8 @@ package com.withBoardManager.boardManager;
 
 import java.util.concurrent.CountDownLatch;
 
-import org.apache.http.conn.util.InetAddressUtils;
 import org.json.JSONObject;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
 public class SpringReceiver {
 
 	private CountDownLatch latch = new CountDownLatch(1);
-	@SuppressWarnings("unused")
 	private final ConfigurableApplicationContext context;
 
 	public SpringReceiver(ConfigurableApplicationContext context) {
 		this.context = context;
 	}
 
-	public void receiveMessage(String message) throws Exception {
+	 @RabbitListener(queues = "bm.rpc.requests")
+	public String receiveMessage(String message) throws Exception {
 
 		String urlToRead = ManagerBoardApplication.getHttpServer();
 		// System.out.println(urlToRead);
@@ -29,13 +29,17 @@ public class SpringReceiver {
 			String result = HTTPrequest.getHTML("http://" + urlToRead + ":8088/event?"+message);
 			JSONObject json = new JSONObject(result);
 			System.out.println("The Web Counting server has sent: " + json.toString());
+			/*For the boards*/
 			((HttpResponse) context.getBean("httpResponse")).setResponse((String) json.get("service"));
 			((HttpResponse) context.getBean("httpResponse")).setCount((int) json.get("count"));
 			((HttpResponse) context.getBean("httpResponse")).setNew(true);
-			System.out.println(">>>Sending to TcallApp...");
-			Runner.sendToTcall(json);
+			/*For the Tcall*/
+			((JSONObject)json.get("ticket")).put("id",Runner.compactAnswer(json.getInt("count"), 
+					json.get("service").toString(), Runner.getServicedManaged().indexOf(json.get("service"))));
+			System.out.println(">>> Sending to TcallApp..."+json.toString());
+			return json.toString();
 		//}
-		latch.countDown();
+		//latch.countDown();
 
 	}
 

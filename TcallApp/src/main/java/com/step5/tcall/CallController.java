@@ -34,7 +34,7 @@ public class CallController {
 			TimeUnit.MILLISECONDS.sleep(50);
     	}
     	synchronized (jsonResponse) {
-    		    		String helloResponse ="Call accepted. Your ticket: ";
+    		    		String helloResponse ="Call accepted. The next ticket is: ";
     		helloResponse += jsonResponse.get("ticket").toString();
     		return helloResponse;
 		}	

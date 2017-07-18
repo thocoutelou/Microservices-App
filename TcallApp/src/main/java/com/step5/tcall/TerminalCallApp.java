@@ -56,36 +56,12 @@ public class TerminalCallApp {
 		return new RabbitAdmin(connectionFactory());
 	}
 	
-	@Bean
-	Queue queue() {
-		return amqpAdmin().declareQueue();
-	}
-	
+
 	@Bean
 	TopicExchange exchange() {
 		return new TopicExchange("sb-boardManager-exchange");
 	}	
-	
-	@Bean
-	Binding binding() {
-		Binding b = BindingBuilder.bind(queue()).to(exchange()).with(("ReceiveForBoardManager"));
-		return b;
-	}
 
-	@Bean
-	SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
-			MessageListenerAdapter listenerAdapter) {
-		SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-		container.setConnectionFactory(connectionFactory);
-		container.setQueueNames(queue().getName());
-		container.setMessageListener(listenerAdapter);
-		return container;
-	}
-
-	@Bean
-	MessageListenerAdapter listenerAdapter(TcallReceiver receiver) {
-		return new MessageListenerAdapter(receiver, "receiveMessage");
-	}
 
 
 	public static void main(String[] args) {

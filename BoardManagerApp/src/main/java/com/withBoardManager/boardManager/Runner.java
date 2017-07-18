@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import java.util.concurrent.TimeUnit;
 
-import org.json.JSONObject;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -14,14 +13,23 @@ import org.springframework.stereotype.Component;
 public class Runner implements CommandLineRunner {
 
 	private static RabbitTemplate rabbitTemplate;
-	private ArrayList<String> prefix;
+	private static ArrayList<String> prefix;
+	private static ArrayList<String> servicedManaged;
+	
+	public static ArrayList<String> getServicedManaged() {
+		return servicedManaged;
+	}
 
-	public ArrayList<String> getPrefix() {
+	public static void setServicedManaged(ArrayList<String> servicedManaged) {
+		Runner.servicedManaged = servicedManaged;
+	}
+
+	public static ArrayList<String> getPrefix() {
 		return prefix;
 	}
 
 	public void setPrefix(ArrayList<String> prefix) {
-		this.prefix = prefix;
+		Runner.prefix = prefix;
 	}
 
 	@SuppressWarnings("unused")
@@ -34,7 +42,7 @@ public class Runner implements CommandLineRunner {
 		this.context = context;
 	}
 
-	public String compactAnswer(int count, String service, int index) {
+	public static String compactAnswer(int count, String service, int index) {
 		String input = Integer.toString(count);
 		for (int i = 0; i < 3; i++) {
 			if (i >= input.length()) {
@@ -47,16 +55,17 @@ public class Runner implements CommandLineRunner {
 			return (service + input);
 		}
 	}
+	/*
 	public static void sendToTcall(JSONObject json) {
 		rabbitTemplate.convertAndSend("sb-boardManager-exchange","ReceiveForBoardManager",json.toString());
 	}
-	
+	*/
 	
 	public void run(String... args) throws Exception {
 
 		/* For the Receiver Mode */
 		System.out.println("---- Ready to receive event----");
-		ArrayList<String> servicesManaged = (ManagerBoardApplication.getNamesServicesToSent());
+		setServicedManaged(ManagerBoardApplication.getNamesServicesToSent());
 		setPrefix(ManagerBoardApplication.getPrefix());
 		while (true) {
 			TimeUnit.MILLISECONDS.sleep(250);
@@ -64,9 +73,9 @@ public class Runner implements CommandLineRunner {
 			if (context.getBean(HttpResponse.class).isNew()) {
 				String response = ((context.getBean(HttpResponse.class).getResponse()));
 				int count = ((context.getBean(HttpResponse.class).getCount()));
-				if (servicesManaged.contains(response)) {
+				if (getServicedManaged().contains(response)) {
 					rabbitTemplate.convertAndSend("spring-boot-exchanger", response,
-							compactAnswer(count, response, servicesManaged.indexOf(response)));
+							compactAnswer(count, response, getServicedManaged().indexOf(response)));
 					System.out.println("Send message to: " + response);
 				} else {
 					System.out.println("Received: " + response + ">>> Unknown service...");
