@@ -15,7 +15,7 @@ public class Runner implements CommandLineRunner {
 	private static RabbitTemplate rabbitTemplate;
 	private static ArrayList<String> prefix;
 	private static ArrayList<String> servicedManaged;
-	
+
 	public static ArrayList<String> getServicedManaged() {
 		return servicedManaged;
 	}
@@ -55,12 +55,7 @@ public class Runner implements CommandLineRunner {
 			return (service + input);
 		}
 	}
-	/*
-	public static void sendToTcall(JSONObject json) {
-		rabbitTemplate.convertAndSend("sb-boardManager-exchange","ReceiveForBoardManager",json.toString());
-	}
-	*/
-	
+
 	public void run(String... args) throws Exception {
 
 		/* For the Receiver Mode */
