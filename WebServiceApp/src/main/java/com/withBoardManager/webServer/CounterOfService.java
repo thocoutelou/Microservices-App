@@ -24,7 +24,7 @@ public class CounterOfService {
 		return counterLastCalled;
 	}
 
-	/* return the number ofthe last ticket added of the queue */
+	/* return the number of the last ticket added of the queue */
 	public Integer getCounterLastCreated() {
 		return counterLastCreated;
 	}
@@ -42,8 +42,8 @@ public class CounterOfService {
 	}
 
 	/*
-	 * remove the next ticket to the queue and return his number Return -1 if the
-	 * queue is empty
+	 * remove the next ticket to the queue and return his number.
+	 *  Return -1 if the queue is empty
 	 */
 	public int popNextTicket() {
 		counterLastCalled++;

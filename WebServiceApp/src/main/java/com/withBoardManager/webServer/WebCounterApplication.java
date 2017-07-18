@@ -68,11 +68,7 @@ public class WebCounterApplication {
 		
 		System.out.println("Starting Web Server...");
 		SpringApplication.run(WebCounterApplication.class, args);
-		/**
-		 * HttpServer server = HttpServer.create(new InetSocketAddress(8888), 0);
-		 * System.out.println("Starting Web Server..."); server.createContext("/event",
-		 * new MyHandler()); server.start();
-		 */
+	
 	}
 
 }

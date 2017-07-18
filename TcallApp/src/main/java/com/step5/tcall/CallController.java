@@ -32,10 +32,10 @@ public class CallController {
 		System.out.println("Request from: " + ipSource + " for the service:" + service);
 		Runner.sendEvent("event?ip=" + ipSource + "&service=" + service);
 		while (jsonResponse == null) {
-			TimeUnit.MILLISECONDS.sleep(50);
+			TimeUnit.MILLISECONDS.sleep(100);
 		}
 		synchronized (jsonResponse) {
-			String helloResponse = "Call accepted. The next ticket is: ";
+			String helloResponse = "Call accepted. You have called the ticket: ";
 			helloResponse += jsonResponse.toString();
 			return helloResponse;
 		}
