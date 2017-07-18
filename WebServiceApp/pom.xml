@@ -5,11 +5,11 @@
 
 	<groupId>com.example</groupId>
 	<artifactId>microServices</artifactId>
-	<version>0.1.2-SNAPSHOT</version>
+	<version>0.2.4-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>WebService</name>
-	<description>Demo project for Spring Boot</description>
+	<description>WebCounter to know which service is called</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

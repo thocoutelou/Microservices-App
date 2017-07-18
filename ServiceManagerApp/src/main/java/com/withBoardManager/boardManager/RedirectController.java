@@ -50,7 +50,7 @@ public class RedirectController {
 		if(services==null){
 			return "Not a valide ip";
 		} else {
-			String name=ManagerBoardApplication.createAndConfigureQueue(services);
+			String name=ServiceManagerApplication.createAndConfigureQueue(services);
 			return name;
 		}
 	}

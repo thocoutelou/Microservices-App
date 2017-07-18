@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.apache.commons.cli.*;
 
 @SpringBootApplication
-public class WebApplication {
+public class WebCounterApplication {
 
 	public static HashMap<String, Integer> serviceToSent = new HashMap<String, Integer>();
 	public static int numberOfServices;
@@ -67,7 +67,7 @@ public class WebApplication {
 		}
 		
 		System.out.println("Starting Web Server...");
-		SpringApplication.run(WebApplication.class, args);
+		SpringApplication.run(WebCounterApplication.class, args);
 		/**
 		 * HttpServer server = HttpServer.create(new InetSocketAddress(8888), 0);
 		 * System.out.println("Starting Web Server..."); server.createContext("/event",

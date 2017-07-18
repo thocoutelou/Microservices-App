@@ -60,8 +60,8 @@ public class Runner implements CommandLineRunner {
 
 		/* For the Receiver Mode */
 		System.out.println("---- Ready to receive event----");
-		setServicedManaged(ManagerBoardApplication.getNamesServicesToSent());
-		setPrefix(ManagerBoardApplication.getPrefix());
+		setServicedManaged(ServiceManagerApplication.getNamesServicesToSent());
+		setPrefix(ServiceManagerApplication.getPrefix());
 		while (true) {
 			TimeUnit.MILLISECONDS.sleep(250);
 			/* For sending response */

@@ -20,7 +20,7 @@ public class SpringReceiver {
 	@RabbitListener(queues = "bm.rpc.requests")
 	public String receiveMessage(String message) throws Exception {
 
-		String urlToRead = ManagerBoardApplication.getHttpServer();
+		String urlToRead = ServiceManagerApplication.getHttpServer();
 
 		System.out.println("Received < " + message + " >");
 
