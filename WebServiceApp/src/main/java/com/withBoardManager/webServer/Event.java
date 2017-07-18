@@ -5,22 +5,22 @@ package com.withBoardManager.webServer;
 public class Event {
 	
 	private String service;
-	private Integer count;
+	private Integer ticketCalled;
 	//private TcallTicket ticket;
 	private boolean isACall=true;
 	
 
 	public Event(String serviceToSent, Integer count){
 		this.service=serviceToSent;
-		this.count=count;
+		this.ticketCalled=count;
 		//this.ticket=ticket;
 	}
 	
 	public String getService(){
 		return this.service;
 	}
-	public Integer getCount(){
-		return this.count;
+	public Integer getTicketCalled(){
+		return this.ticketCalled;
 	}
 	/*public TcallTicket getTicket() {
 		return this.ticket;
