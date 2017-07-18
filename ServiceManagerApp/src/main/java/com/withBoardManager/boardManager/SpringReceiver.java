@@ -37,16 +37,19 @@ public class SpringReceiver {
 			}
 			((HttpResponse) context.getBean("httpResponse")).setResponse((String) json.get("service"));
 			
-			((HttpResponse) context.getBean("httpResponse")).setCount((int) json.get("count"));
+			((HttpResponse) context.getBean("httpResponse")).setCount((int) json.get("ticketCalled"));
 			/*Launch the http Response*/
 			((HttpResponse) context.getBean("httpResponse")).setNew(true);
 			json.put("id",
-					Runner.compactAnswer(json.getInt("count"), json.get("service").toString(),
+					Runner.compactAnswer(json.getInt("ticketCalled"), json.get("service").toString(),
 							Runner.getServicedManaged().indexOf(json.get("service"))));
 			System.out.println(">>> Sending to TcallApp...");
 			return json.toString();
 		} else {
 			/* For the Kiosk */
+			json.put("id",
+					Runner.compactAnswer(json.getInt("ticketNumber"), json.get("service").toString(),
+							Runner.getServicedManaged().indexOf(json.get("service"))));
 			System.out.println(">>> Sending to EmitterApp (kiosk) ...");
 			System.out.println("The ticket:" +json.toString());
 			return json.toString();
