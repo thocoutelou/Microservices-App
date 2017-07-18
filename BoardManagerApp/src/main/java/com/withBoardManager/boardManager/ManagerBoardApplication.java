@@ -150,7 +150,7 @@ public class ManagerBoardApplication {
 
 	@Bean
 	Queue queue() {
-		return amqpAdmin().declareQueue();
+		return new Queue("bm.rpc.requests");
 	}
 
 	@Bean

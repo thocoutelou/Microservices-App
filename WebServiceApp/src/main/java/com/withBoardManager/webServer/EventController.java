@@ -44,8 +44,8 @@ public class EventController {
 		HashMap<String, Integer> map = ((HashMap<String, Integer>) context.getBean("serviceToSent"));
 		String key = minInHashMap(map);
 		int value = map.get(key);
-		TcallTicket ticket= new TcallTicket(ip, service, value+1);
-		Event response = new Event(key,value+1,ticket);
+		TcallTicket ticket= new TcallTicket(service, value+1);
+		Event response = new Event(key,value,ticket);
 		((HashMap<String, Integer>) context.getBean("serviceToSent")).put(key, value + 1);
 		return (response);
 	}

@@ -2,26 +2,26 @@ package com.withBoardManager.webServer;
 
 public class TcallTicket {
 	
-	public String ip;
+	//public String ip;
 	public String service;
-	public int TicketNumber;
+	public int ticketNumber;
 	
-	public TcallTicket(String ip, String service, int number) {
-		this.ip=ip;
+	public TcallTicket(String service, int number) {
+		//this.ip=ip;
 		this.service=service;
-		TicketNumber=number;
+		ticketNumber=number;
 	}
-
+/*
 	public String getIp() {
 		return ip;
 	}
-
+*/
 	public String getService() {
 		return service;
 	}
 
 	public int getTicketNumber() {
-		return TicketNumber;
+		return ticketNumber;
 	}
 }
 
