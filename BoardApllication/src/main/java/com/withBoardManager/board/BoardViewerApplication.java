@@ -9,7 +9,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-public class BoardApplication {
+public class BoardViewerApplication {
 
 	
 	public static String IpManager;
@@ -20,7 +20,7 @@ public class BoardApplication {
 
 
 	public static void setIpServer(String ipServer) {
-		BoardApplication.ipServer = ipServer;
+		BoardViewerApplication.ipServer = ipServer;
 		IndexController.setIpServer(ipServer);
 	}
 	public static void setIpManager(String ipManager) {
@@ -76,6 +76,6 @@ public class BoardApplication {
 		
 
 		/* Launch the Spring-boot application */
-		new SpringApplicationBuilder(BoardApplication.class).run(args);
+		new SpringApplicationBuilder(BoardViewerApplication.class).run(args);
 	}
 }

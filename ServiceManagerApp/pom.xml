@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.example</groupId>
-	<artifactId>BoardManager</artifactId>
-	<version>0.2.0-SNAPSHOT</version>
+	<artifactId>ServiceManager</artifactId>
+	<version>0.2.4-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>BoardManagerApp</name>
-	<description>Demo project for Spring Boot</description>
+	<name>ServiceManagerApp</name>
+	<description>Manage the services and their interconnections</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

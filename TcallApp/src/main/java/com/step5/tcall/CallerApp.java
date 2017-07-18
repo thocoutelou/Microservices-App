@@ -17,17 +17,17 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-public class TerminalCallApp {
+public class CallerApp {
 
 	public static String ipServer;
 	public static String service;
 
 	public static void setService(String service) {
-		TerminalCallApp.service = service;
+		CallerApp.service = service;
 	}
 
 	public static void setIpServer(String ipServer) {
-		TerminalCallApp.ipServer = ipServer;
+		CallerApp.ipServer = ipServer;
 	}
 
 	@Bean
@@ -86,6 +86,6 @@ public class TerminalCallApp {
 		setService("CallForBoardManager");
 
 		/* Launch the Spring-boot application */
-		new SpringApplicationBuilder(TerminalCallApp.class).run(args);
+		new SpringApplicationBuilder(CallerApp.class).run(args);
 	}
 }

@@ -20,7 +20,7 @@ import java.util.Random;
 import org.apache.commons.cli.*;
 
 @SpringBootApplication
-public class ManagerBoardApplication {
+public class ServiceManagerApplication {
 
 	public static String ipServer;
 	public static String httpServer;
@@ -62,7 +62,7 @@ public class ManagerBoardApplication {
 	}
 
 	public static void addServiceToSent(String serviceToSent) {
-		ManagerBoardApplication.serviceToSent.add(serviceToSent);
+		ServiceManagerApplication.serviceToSent.add(serviceToSent);
 	}
 
 	public static void addPrefixString(String servicePrefix) {
@@ -70,11 +70,11 @@ public class ManagerBoardApplication {
 	}
 
 	public static void setIpServer(String ipServer) {
-		ManagerBoardApplication.ipServer = ipServer;
+		ServiceManagerApplication.ipServer = ipServer;
 	}
 
 	public static void sethttpServer(String url) {
-		ManagerBoardApplication.httpServer = url;
+		ServiceManagerApplication.httpServer = url;
 	}
 
 	public static void setServiceForReceiving(String service) {
@@ -124,7 +124,7 @@ public class ManagerBoardApplication {
 
 
 	public static void setPathToData(String pathToData) {
-		ManagerBoardApplication.pathToData = pathToData;
+		ServiceManagerApplication.pathToData = pathToData;
 	}
 	/*
 	 * Bean for the RabbitMq service; for more details, see the web site
@@ -306,7 +306,7 @@ public class ManagerBoardApplication {
 		
 		RedirectController.configureData(getPathToData());
 		/* Launch the Spring-boot application */
-		new SpringApplicationBuilder(ManagerBoardApplication.class).web(true).run(args);
+		new SpringApplicationBuilder(ServiceManagerApplication.class).web(true).run(args);
 	}
 
 }
