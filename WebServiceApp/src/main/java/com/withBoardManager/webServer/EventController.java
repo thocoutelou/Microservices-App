@@ -28,7 +28,7 @@ public class EventController {
 			Event response = new Event("No more ticket for the service: " + service, -1);
 			return response;
 		} else {
-			Event response = new Event(service, value);
+			Event response = new Event(service, value+1);
 			return (response);
 		}
 	}

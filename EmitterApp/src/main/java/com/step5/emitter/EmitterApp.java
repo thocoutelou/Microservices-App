@@ -48,7 +48,7 @@ public class EmitterApp {
 
 	@Bean
 	TopicExchange exchange() {
-		return new TopicExchange("ke-emitters-exchange");
+		return new TopicExchange("sb-boardManager-exchange");
 	}
 
 	public static void main(String[] args) {

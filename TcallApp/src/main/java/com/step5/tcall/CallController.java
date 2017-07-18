@@ -35,7 +35,12 @@ public class CallController {
 			TimeUnit.MILLISECONDS.sleep(100);
 		}
 		synchronized (jsonResponse) {
-			String helloResponse = "Call accepted. You have called the ticket: ";
+			String helloResponse="";
+			if (jsonResponse.has("error")) {
+				helloResponse = "Call failed :";
+			} else {
+				helloResponse = "Call accepted. You have called the ticket: ";
+			}
 			helloResponse += jsonResponse.toString();
 			return helloResponse;
 		}

@@ -1,7 +1,6 @@
 package com.withBoardManager.webServer;
 
 import java.util.LinkedList;
-import java.util.NoSuchElementException;
 
 /*
  * Object used in the Counting Service to know which is the ticket which waiting for the service
@@ -37,19 +36,19 @@ public class CounterOfService {
 		if (!ticketQueue.contains(ticket.getTicketNumber())) {
 			counterLastCreated++;
 			ticketQueue.add(ticket.getTicketNumber());
-	
+
 		}
 	}
 
 	/*
-	 * remove the next ticket to the queue and return his number.
-	 *  Return -1 if the queue is empty
+	 * remove the next ticket to the queue and return his number. Return -1 if the
+	 * queue is empty
 	 */
 	public int popNextTicket() {
-		counterLastCalled++;
-		try {
+		if (!ticketQueue.isEmpty()) {
+			counterLastCalled++;
 			return ticketQueue.pop();
-		} catch (NoSuchElementException e) {
+		} else {
 			return -1;
 		}
 	}

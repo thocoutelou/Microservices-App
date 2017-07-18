@@ -26,6 +26,7 @@ public class SpringReceiver {
 
 		// TODO Change the port
 		String result = HTTPrequest.getHTML("http://" + urlToRead + ":8088/" + message);
+		try {
 		JSONObject json = new JSONObject(result);
 		System.out.println("The Web Counting server has sent: " + json.toString());
 		if (json.getBoolean("acall")) {
@@ -50,6 +51,9 @@ public class SpringReceiver {
 			System.out.println("The ticket:" +json.toString());
 			return json.toString();
 		}
+	} catch (Exception e) {
+		return("Error from the ServiceManager: type=Internal Server Error, status=500");
+	}
 
 	}
 
