@@ -36,10 +36,11 @@ public class EventController {
 	/* Response for recall, send again the last event*/
 	@RequestMapping("/recall")
 	public Event recall(@RequestParam(value = "ip") String ip, @RequestParam(value = "service") String service) {
-		if (WebCounterApplication.getLastCall().get(service)==null) {
-			return new Event("Service never called", -1);
-		} else {
+		try{
 			return WebCounterApplication.getLastCall().get(service);
+		} catch (NullPointerException e) {
+			return new Event("Service never called", -1);
+
 		}
 	}
 
