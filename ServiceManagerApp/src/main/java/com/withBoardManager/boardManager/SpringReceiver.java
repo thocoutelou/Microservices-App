@@ -30,6 +30,7 @@ public class SpringReceiver {
 		JSONObject json = new JSONObject(result);
 		System.out.println("The Web Counting server has sent: " + json.toString());
 		if (json.getBoolean("acall")) {
+			json.remove("acall");
 			/* For the Tcall & boards */
 			if (!ServiceManagerApplication.serviceToSent.contains(json.get("service"))){
 				/*There are no ticket for this service*/
@@ -43,13 +44,16 @@ public class SpringReceiver {
 			json.put("id",
 					Runner.compactAnswer(json.getInt("ticketCalled"), json.get("service").toString(),
 							Runner.getServicedManaged().indexOf(json.get("service"))));
+			json.remove("ticketCalled");
 			System.out.println(">>> Sending to TcallApp...");
 			return json.toString();
 		} else {
 			/* For the Kiosk */
+			json.remove("acall");
 			json.put("id",
 					Runner.compactAnswer(json.getInt("ticketNumber"), json.get("service").toString(),
 							Runner.getServicedManaged().indexOf(json.get("service"))));
+			json.remove("ticketNumber");
 			System.out.println(">>> Sending to EmitterApp (kiosk) ...");
 			System.out.println("The ticket:" +json.toString());
 			return json.toString();
