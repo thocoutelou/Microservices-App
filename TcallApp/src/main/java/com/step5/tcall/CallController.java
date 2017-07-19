@@ -35,11 +35,33 @@ public class CallController {
 			TimeUnit.MILLISECONDS.sleep(100);
 		}
 		synchronized (jsonResponse) {
-			String helloResponse="";
+			String helloResponse = "";
 			if (jsonResponse.has("error")) {
 				helloResponse = "Call failed :";
 			} else {
 				helloResponse = "Call accepted. You have called the ticket: ";
+			}
+			helloResponse += jsonResponse.toString();
+			return helloResponse;
+		}
+	}
+
+	@RequestMapping("/recall")
+	public String recall(HttpServletRequest request, @RequestParam(value = "service") String service)
+			throws InterruptedException {
+		// Get the ip of the client
+		String ipSource = request.getRemoteAddr();
+		System.out.println("Recall from: " + ipSource + " for the service:" + service);
+		Runner.sendEvent("recall?ip=" + ipSource + "&service=" + service);
+		while (jsonResponse == null) {
+			TimeUnit.MILLISECONDS.sleep(100);
+		}
+		synchronized (jsonResponse) {
+			String helloResponse = "";
+			if (jsonResponse.has("error")) {
+				helloResponse = "Call failed :";
+			} else {
+				helloResponse = "Recall accepted. You have recalled the ticket: ";
 			}
 			helloResponse += jsonResponse.toString();
 			return helloResponse;
