@@ -30,7 +30,7 @@ public class ServiceManagerApplication {
 	public static int end = 10;
 	public static String serviceForReceiving;
 	public static String data;
-	public static String pathToData;
+	public static String addressDB;
 	private static TopicExchange exchangeForSendind;
 	private static AmqpAdmin amqpAdmin;
 	private static ConnectionFactory connectFactory;
@@ -118,13 +118,13 @@ public class ServiceManagerApplication {
 		return (end);
 	}
 
-	public static String getPathToData() {
-		return pathToData;
+	public static String getaddressDB() {
+		return addressDB;
 	}
 
 
-	public static void setPathToData(String pathToData) {
-		ServiceManagerApplication.pathToData = pathToData;
+	public static void setAddressDB(String address) {
+		ServiceManagerApplication.addressDB = address;
 	}
 	/*
 	 * Bean for the RabbitMq service; for more details, see the web site
@@ -217,7 +217,7 @@ public class ServiceManagerApplication {
 		httpServer.setRequired(true);
 		options.addOption(httpServer);
 		
-		Option data = new Option("d", "data", true, "Path to the Json data");
+		Option data = new Option("d", "data", true, "address of the Redis DB");
 		data.setRequired(true);
 		options.addOption(data);
 
@@ -302,9 +302,9 @@ public class ServiceManagerApplication {
 		if (cmd.getOptionValue("start") != null) {
 			setSTART(Integer.parseInt(cmd.getOptionValue("start")));
 		}
-		setPathToData(cmd.getOptionValue("data"));
+		setAddressDB(cmd.getOptionValue("data"));
 		
-		RedirectController.configureData(getPathToData());
+		RedirectController.configureData(getaddressDB());
 		/* Launch the Spring-boot application */
 		new SpringApplicationBuilder(ServiceManagerApplication.class).web(true).run(args);
 	}

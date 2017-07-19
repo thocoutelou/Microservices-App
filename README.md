@@ -25,8 +25,7 @@ In this step, the EmitterApp & TcallApp are appeared. They communicate with the 
 * The TcallApp  is a web server which is a proxy for the Terminal call to asks which ticket is the next.  
 
 * The CountingManager (rename WebCounterApp) has a new policy with the calls. It implements a queue of tickets: when a Emitter (a kiosk) asks a ticket for a service,
-it send him a awmser and adds a ticket to the queue.   
-
+it send him a awmser and adds a ticket to the queue.
 * When the WebCounterApp receives a event from a Tcall, it check if there is a ticket in the witing queue, then it removes the ticket form the queue.   
 
 ## Step 4:
@@ -55,7 +54,7 @@ Every App is deployed in a Docker container in the same network.
  	Publisher                       ----> Board1
             \                      /
           -----> BoardManager --------> Board2         (RabbitMQ server)
-		    /           |          \
+		     /     |           \
  	Publisher          v            ----> Board3
             	CountingManager
 

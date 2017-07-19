@@ -1,29 +1,51 @@
 package com.withBoardManager.boardManager;
 
-import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import redis.clients.jedis.Jedis;
+
+
 
 @RestController
 public class RedirectController {
 
 	public static JSONObject data;
-	public static JSONArray boards;
+	public static JSONArray boards=new JSONArray();
 	
-	public static void configureData(String path) {
-		JSONParser parser = new JSONParser();
+	@SuppressWarnings("unchecked")
+	public static void configureData(String address) {
+		//JSONParser parser = new JSONParser();
 		try {
-
-			Object obj = parser.parse(new FileReader(path));
-			data = (JSONObject) obj;
-			System.out.println(data.get("boards").toString());
-			boards= (JSONArray) data.get("boards");
+			Jedis client = new Jedis(address);
+			client.auth("redis");
+			Set<String>board=client.smembers("boards");
+			System.out.println(board.toString());
+			JSONObject interData=new JSONObject();
+			Iterator<String>iter = board.iterator();
+			while(iter.hasNext()){
+				String key= iter.next();
+				String ip=client.lpop(key).toString();
+				interData.putIfAbsent("ip", ip);
+				interData.putIfAbsent("services", client.lrange(key,0,-1));
+				client.lpush(key, ip);
+				boards.add(interData.clone());
+				interData.clear();
+			}
+			System.out.println(boards.toString());
+			client.close();
+			//Object obj = parser.parse(new FileReader(path));
+			//data = (JSONObject) obj;
+			//System.out.println(value);
+			//boards= (JSONArray) data.get("boards");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
