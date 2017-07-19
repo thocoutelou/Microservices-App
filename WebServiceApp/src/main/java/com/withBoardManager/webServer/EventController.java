@@ -22,14 +22,24 @@ public class EventController {
 	public Event event(@RequestParam(value = "ip") String ip, @RequestParam(value = "service") String service) {
 		int value = ((HashMap<String, CounterOfService>) context.getBean("serviceToSent")).get(service)
 				.getCounterLastCalled();
-		if (((HashMap<String, CounterOfService>) context.getBean("serviceToSent"))
-				.get(service).popNextTicket() == -1) {
+		if (((HashMap<String, CounterOfService>) context.getBean("serviceToSent")).get(service).popNextTicket() == -1) {
 			System.out.println("No more tickets for this service");
 			Event response = new Event("No more ticket for the service: " + service, -1);
 			return response;
 		} else {
-			Event response = new Event(service, value+1);
+			Event response = new Event(service, value + 1);
+			WebCounterApplication.getLastCall().put(service, response);
 			return (response);
+		}
+	}
+
+	/* Response for recall, send again the last event*/
+	@RequestMapping("/recall")
+	public Event recall(@RequestParam(value = "ip") String ip, @RequestParam(value = "service") String service) {
+		if (WebCounterApplication.getLastCall().get(service)==null) {
+			return new Event("Service never called", -1);
+		} else {
+			return WebCounterApplication.getLastCall().get(service);
 		}
 	}
 

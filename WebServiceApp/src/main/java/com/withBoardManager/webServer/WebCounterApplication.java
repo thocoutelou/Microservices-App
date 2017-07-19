@@ -11,11 +11,18 @@ public class WebCounterApplication {
 
 	public static HashMap<String, CounterOfService> serviceToSent = new HashMap<String, CounterOfService>();
 	public static int numberOfServices;
+	public static HashMap<String, Event> lastCall=new HashMap<String,Event>();
 
+	
 	public static HashMap<String, CounterOfService> getServiceToSent() {
 		return serviceToSent;
 	}
 
+	public static HashMap<String, Event> getLastCall() {
+		return lastCall;
+	}
+
+	
 	private static void setNumberOfServices(int nb) {
 		numberOfServices = nb;
 	}
@@ -60,6 +67,7 @@ public class WebCounterApplication {
 		try {
 			while ((cmd.getOptionValues("servicesToSent")[i] != null)) {
 				addServiceToSent(cmd.getOptionValues("servicesToSent")[i]);
+				WebCounterApplication.getLastCall().put(cmd.getOptionValues("servicesToSent")[i], null);
 				i++;
 			}
 		} catch (Exception e) {
