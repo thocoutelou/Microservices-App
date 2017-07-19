@@ -17,7 +17,17 @@ Or for the app which doenot need Spring boot:
 The the .jar file is in the directory ./target
 
 --------------
+## Step 5:
 
+In this step, the EmitterApp & TcallApp are appeared. They communicate with the BoardManager (rename ServiceManager to avoid confusion) by RPC using the AMQP of the RabbitMQ server.
+* The EmitterApp is a web server which is a proxy for the Kiosk browser to ask a new ticket for a service.  
+
+* The TcallApp  is a web server which is a proxy for the Terminal call to asks which ticket is the next.  
+
+* The CountingManager (rename WebCounterApp) has a new policy with the calls. It implements a queue of tickets: when a Emitter (a kiosk) asks a ticket for a service,
+it send him a awmser and adds a ticket to the queue.   
+
+* When the WebCounterApp receives a event from a Tcall, it check if there is a ticket in the witing queue, then it removes the ticket form the queue.   
 
 ## Step 4:
 
@@ -43,9 +53,9 @@ Every App is deployed in a Docker container in the same network.
 
 
  	Publisher                       ----> Board1
-      \                      /
+            \                      /
           -----> BoardManager --------> Board2         (RabbitMQ server)
-		  /           |          \
+		    /           |          \
  	Publisher          v            ----> Board3
             	CountingManager
 
@@ -66,13 +76,13 @@ Here we send messages to a service (a rootingKey):
 
 
 
-                                   	    -> Client1 {ServiceA}
+                                   	      -> Client1 {ServiceA}
                                          /
                                         /
  	Publisher ---#ServiceA---> MessageBroker ---> Client {ServiceA, ServiceB}
                                         \
                                          \
-                                   	    -> Client3{ServiceB}
+                                   	      -> Client3{ServiceB}
 
 
 
