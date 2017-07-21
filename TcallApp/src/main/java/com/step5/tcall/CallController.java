@@ -20,10 +20,11 @@ public class CallController {
 
 	@RequestMapping("/")
 	public String home() {
-		return "Hello! \n" + "This app is used by a terminal call to send an event to the BoardManager. \n"
+		return "Hello! \n" + "This app is used by a terminal call to send an event to the Service Manager. \n"
 				+ "Please use the browser of a terminal call to make your request with the route '/event?service=' with the service you want to call";
 	}
 
+	/* for consuming a ticket of a service */
 	@RequestMapping("/event")
 	public String event(HttpServletRequest request, @RequestParam(value = "service") String service)
 			throws InterruptedException {
@@ -46,6 +47,26 @@ public class CallController {
 		}
 	}
 
+	/* reload the configuration */
+	@RequestMapping("/configuration")
+	public String configuration(HttpServletRequest request) {
+		String ipSource = request.getRemoteAddr();
+		System.out.println("Reconfigure data asking by " + ipSource);
+		Runner.sendEvent("configuration");
+		synchronized (jsonResponse) {
+			String helloResponse = "";
+			if (jsonResponse.has("error")) {
+				helloResponse = "Configuration failed :";
+			} else {
+				helloResponse = "New configuration accepted.";
+			}
+			//helloResponse += jsonResponse.toString();
+			return helloResponse;
+		}
+	}
+	
+	
+	/* for recalling the last ticket of a service*/
 	@RequestMapping("/recall")
 	public String recall(HttpServletRequest request, @RequestParam(value = "service") String service)
 			throws InterruptedException {
