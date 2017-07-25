@@ -1,5 +1,9 @@
 package com.withBoardManager.boardManager;
 
+import static com.withBoardManager.boardManager.Log.GEN;
+import static com.withBoardManager.boardManager.Log.COMM;
+import static com.withBoardManager.boardManager.Log.LOG_ON;
+
 import java.util.ArrayList;
 
 import java.util.concurrent.TimeUnit;
@@ -59,7 +63,9 @@ public class Runner implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 
 		/* For the Receiver Mode */
-		System.out.println("---- Ready to receive event----");
+		System.out.println("----- Ready to receive event -----");
+		if (LOG_ON && GEN.isInfoEnabled()) 
+			GEN.info("INIT: Ready to receive event");
 		setServicedManaged(ServiceManagerApplication.getNamesServicesToSent());
 		setPrefix(ServiceManagerApplication.getPrefix());
 		while (true) {
@@ -71,9 +77,13 @@ public class Runner implements CommandLineRunner {
 				if (getServicedManaged().contains(response)) {
 					rabbitTemplate.convertAndSend("spring-boot-exchanger", response,
 							compactAnswer(count, response, getServicedManaged().indexOf(response)));
-					System.out.println("Send message to: " + response);
+					if (LOG_ON && COMM.isInfoEnabled()) 
+						COMM.info("SEND: Send message to " + response);
+					//System.out.println("Send message to: " + response);
 				} else {
-					System.out.println("Received: " + response + ">>> Unknown service...");
+					if (LOG_ON && COMM.isInfoEnabled()) 
+						COMM.info("ERROR:" +response +" >>> Unknown service...");
+					//System.out.println("Received: " + response + ">>> Unknown service...");
 				}
 				context.getBean(HttpResponse.class).setNew(false);
 

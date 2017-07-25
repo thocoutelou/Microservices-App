@@ -1,5 +1,9 @@
 package com.withBoardManager.boardManager;
 
+import static com.withBoardManager.boardManager.Log.COMM;
+import static com.withBoardManager.boardManager.Log.GEN;
+import static com.withBoardManager.boardManager.Log.LOG_ON;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,26 +28,29 @@ public class RedirectController {
 			Jedis client = new Jedis(address);
 			client.auth("redis");
 			Set<String> board = client.smembers("boards");
-			System.out.println(board.toString());
+			if (LOG_ON && GEN.isDebugEnabled()) 
+				GEN.debug("INIT: " + board.toString());
+			//System.out.println(board.toString());
 			//JSONObject interData = new JSONObject();
 			Iterator<String> iter = board.iterator();
 			while (iter.hasNext()) {
 				String key = iter.next();
 				String ip = client.lpop(key).toString();
 				//interData.putIfAbsent("ip", ip);
-				System.out.println(ip);
+				if (LOG_ON && GEN.isDebugEnabled()) 
+					GEN.debug("INIT: " + ip);
+				//System.out.println(ip);
 				//interData.putIfAbsent("services", client.lrange(key, 0, -1));
 				boards.put(ip, client.lrange(key, 0, -1).toString());
 				client.lpush(key, ip);
 
 				//interData.clear();
 			}
-			System.out.println(boards.toString());
+			if (LOG_ON && GEN.isTraceEnabled()) 
+				GEN.trace("INIT: " + boards.toString());
+			//System.out.println(boards.toString());
 			client.close();
-			// Object obj = parser.parse(new FileReader(path));
-			// data = (JSONObject) obj;
-			// System.out.println(value);
-			// boards= (JSONArray) data.get("boards");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -67,7 +74,9 @@ public class RedirectController {
 
 	@RequestMapping("/queue")
 	public String queue(@RequestParam(value = "ip") String ip) {
-		System.out.println("Request from: " + ip);
+		if (LOG_ON && COMM.isTraceEnabled()) 
+			COMM.trace("QUEUE: Request from: " + ip);
+		//System.out.println("Request from: " + ip);
 		ArrayList<String> services = findServices(ip);
 		if (services == null) {
 			return "Not a valide ip";

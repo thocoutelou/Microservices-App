@@ -1,5 +1,6 @@
 package com.withBoardManager.boardManager;
 
+import static com.withBoardManager.boardManager.Log.*;
 import java.util.concurrent.CountDownLatch;
 
 import org.json.JSONObject;
@@ -25,7 +26,9 @@ public class SpringReceiver {
 			JSONObject json = new JSONObject();
 			try {
 				/* load new configuration from the DB */
-				System.out.println("Configuration reloaded from the database");
+				if (LOG_ON && GEN.isInfoEnabled()) 
+					GEN.info("Configuration reloaded from the database");
+				//System.out.println("Configuration reloaded from the database");
 				RedirectController.configureData(ServiceManagerApplication.addressDB);
 				json.put("Configuration", "reloaded");
 			} catch (Exception e) {
@@ -36,13 +39,16 @@ public class SpringReceiver {
 		} else {
 
 			String urlToRead = ServiceManagerApplication.getHttpServer();
-
-			System.out.println("Received < " + message + " >");
+			if (LOG_ON && COMM.isInfoEnabled()) 
+				COMM.info("RECEIVE: " +message);
+			//System.out.println("Received < " + message + " >");
 
 			String result = HTTPrequest.getHTML("http://" + urlToRead + ":8088/" + message);
 			try {
 				JSONObject json = new JSONObject(result);
-				System.out.println("The Web Counting server has sent: " + json.toString());
+				if (LOG_ON && COMM.isInfoEnabled()) 
+					COMM.info( "COUNTER: The Web Counting server has sent: " + json.toString());
+				//System.out.println("The Web Counting server has sent: " + json.toString());
 				if (json.getBoolean("acall")) {
 					json.remove("acall");
 					/* For the Tcall & boards */
@@ -58,7 +64,9 @@ public class SpringReceiver {
 					json.put("id", Runner.compactAnswer(json.getInt("ticketCalled"), json.get("service").toString(),
 							Runner.getServicedManaged().indexOf(json.get("service"))));
 					json.remove("ticketCalled");
-					System.out.println(">>> Sending to TcallApp...");
+					if (LOG_ON && COMM.isInfoEnabled()) 
+						COMM.info("SEND: sending to TcallApp...");
+					//System.out.println(">>> Sending to TcallApp...");
 					return json.toString();
 				} else {
 					/* For the Kiosk */
@@ -66,11 +74,15 @@ public class SpringReceiver {
 					json.put("id", Runner.compactAnswer(json.getInt("ticketNumber"), json.get("service").toString(),
 							Runner.getServicedManaged().indexOf(json.get("service"))));
 					json.remove("ticketNumber");
-					System.out.println(">>> Sending to EmitterApp (kiosk) ...");
-					System.out.println("The ticket:" + json.toString());
+					if (LOG_ON && COMM.isInfoEnabled()) 
+						COMM.info("SEND: sending to EmitterApp (kiosk) the ticket: "+ json.toString());
+					//System.out.println(">>> Sending to EmitterApp (kiosk) ...");
+					//System.out.println("The ticket:" + json.toString());
 					return json.toString();
 				}
 			} catch (Exception e) {
+				if (LOG_ON && COMM.isInfoEnabled()) 
+					COMM.info("ERROR: type=Internal Server Error, status=500");
 				return ("Error from the ServiceManager: type=Internal Server Error, status=500");
 			}
 		}
