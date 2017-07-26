@@ -1,5 +1,9 @@
 package com.step5.tcall;
 
+import static com.step5.tcall.Log.COMM;
+import static com.step5.tcall.Log.GEN;
+import static com.step5.tcall.Log.LOG_ON;
+
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +34,9 @@ public class CallController {
 			throws InterruptedException {
 		// Get the ip of the client
 		String ipSource = request.getRemoteAddr();
-		System.out.println("Request from: " + ipSource + " for the service:" + service);
+    	if (LOG_ON && COMM.isInfoEnabled()) 
+    		COMM.info("WEB: request from "+ipSource+ " for the service "+service);
+		//System.out.println("Request from: " + ipSource + " for the service:" + service);
 		Runner.sendEvent("event?ip=" + ipSource + "&service=" + service);
 		while (jsonResponse == null) {
 			TimeUnit.MILLISECONDS.sleep(100);
@@ -51,7 +57,9 @@ public class CallController {
 	@RequestMapping("/configuration")
 	public String configuration(HttpServletRequest request) {
 		String ipSource = request.getRemoteAddr();
-		System.out.println("Reconfigure data asking by " + ipSource);
+    	if (LOG_ON && GEN.isInfoEnabled()) 
+    		GEN.info("WEB: Reconfigure data asking by " + ipSource);
+		//System.out.println("Reconfigure data asking by " + ipSource);
 		Runner.sendEvent("configuration");
 		synchronized (jsonResponse) {
 			String helloResponse = "";
@@ -72,7 +80,9 @@ public class CallController {
 			throws InterruptedException {
 		// Get the ip of the client
 		String ipSource = request.getRemoteAddr();
-		System.out.println("Recall from: " + ipSource + " for the service:" + service);
+    	if (LOG_ON && COMM.isInfoEnabled()) 
+    		COMM.info("WEB: Recall from: " + ipSource + " for the service:" + service);
+		//System.out.println("Recall from: " + ipSource + " for the service:" + service);
 		Runner.sendEvent("recall?ip=" + ipSource + "&service=" + service);
 		while (jsonResponse == null) {
 			TimeUnit.MILLISECONDS.sleep(100);
