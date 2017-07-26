@@ -16,8 +16,6 @@ import org.springframework.context.annotation.Bean;
 
 import static com.withBoardManager.boardManager.Log.GEN;
 import static com.withBoardManager.boardManager.Log.LOG_ON;
-import static com.withBoardManager.boardManager.Log.LOGGER_NAME_COMM;
-import static com.withBoardManager.boardManager.Log.LOGGER_NAME_GEN;
 
 
 import java.util.ArrayList;
@@ -174,8 +172,8 @@ public class ServiceManagerApplication {
 
 	@Bean
 	Binding binding() {
-		if (LOG_ON && GEN.isInfoEnabled()) 
-			GEN.info("INIT: "+serviceForReceiving);
+		if (LOG_ON && GEN.isEnabledFor(Level.INFO)) 
+			GEN.log(Level.INFO, "INIT: "+serviceForReceiving);
 		//System.out.println(serviceForReceiving);
 		Binding b = BindingBuilder.bind(queue()).to(exchange()).with("CallForBoardManager");
 		return b;
@@ -215,8 +213,6 @@ public class ServiceManagerApplication {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		Log.configureALogger(LOGGER_NAME_GEN, Level.INFO);
-		Log.configureALogger(LOGGER_NAME_COMM, Level.INFO);
 		/* From the apache.commons.cli library to manage the arguments */
 		Options options = new Options();
 
@@ -275,7 +271,7 @@ public class ServiceManagerApplication {
 		} catch (ParseException e) {
 			if (LOG_ON && GEN.isDebugEnabled()) 
 				GEN.debug(e.getMessage());
-			//System.out.println(e.getMessage());
+			System.out.println(e.getMessage());
 			formatter.printHelp("utility-name", options);
 
 			System.exit(1);
@@ -296,7 +292,7 @@ public class ServiceManagerApplication {
 				i++;
 			}
 		} catch (Exception e) {
-			if (LOG_ON && GEN.isInfoEnabled()) 
+			if (LOG_ON && GEN.isEnabledFor(Level.INFO)) 
 				GEN.info("INIT: Managing the services: " + getNamesServicesToSent().toString());
 			//System.out.println("Managing the services: " + getNamesServicesToSent().toString());
 		}
@@ -308,8 +304,8 @@ public class ServiceManagerApplication {
 				i++;
 			}
 		} catch (Exception e) {
-			if (LOG_ON && GEN.isInfoEnabled()) 
-				GEN.info("INIT: with the Prefix: " + getPrefix().toString());
+			if (LOG_ON && GEN.isEnabledFor(Level.INFO)) 
+				GEN.log(Level.INFO,"INIT: with the Prefix: " + getPrefix().toString());
 			//System.out.println("With the Prefix: " + getPrefix().toString());
 		}
 

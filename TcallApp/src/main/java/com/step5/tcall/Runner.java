@@ -39,7 +39,7 @@ public class Runner implements CommandLineRunner {
 
 		if (LOG_ON && GEN.isInfoEnabled()) 
     		GEN.info("INIT: Ready for managing the terminal calls");
-		System.out.println("-------Ready for managing the terminal calls------");
+		//System.out.println("-------Ready for managing the terminal calls------");
 		while (true) {
 			TimeUnit.MILLISECONDS.sleep(100);
 		}

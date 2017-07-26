@@ -3,6 +3,7 @@ package com.withBoardManager.boardManager;
 import static com.withBoardManager.boardManager.Log.*;
 import java.util.concurrent.CountDownLatch;
 
+import org.apache.log4j.Level;
 import org.json.JSONObject;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -26,8 +27,8 @@ public class SpringReceiver {
 			JSONObject json = new JSONObject();
 			try {
 				/* load new configuration from the DB */
-				if (LOG_ON && GEN.isInfoEnabled()) 
-					GEN.info("Configuration reloaded from the database");
+				if (LOG_ON && GEN.isEnabledFor(Level.INFO)) 
+					GEN.log(Level.INFO,"Configuration reloaded from the database");
 				//System.out.println("Configuration reloaded from the database");
 				RedirectController.configureData(ServiceManagerApplication.addressDB);
 				json.put("Configuration", "reloaded");
@@ -39,15 +40,15 @@ public class SpringReceiver {
 		} else {
 
 			String urlToRead = ServiceManagerApplication.getHttpServer();
-			if (LOG_ON && COMM.isInfoEnabled()) 
-				COMM.info("RECEIVE: " +message);
+			if (LOG_ON && COMM.isEnabledFor(Level.INFO)) 
+				COMM.log(Level.INFO,"RECEIVE: " +message);
 			//System.out.println("Received < " + message + " >");
 
 			String result = HTTPrequest.getHTML("http://" + urlToRead + ":8088/" + message);
 			try {
 				JSONObject json = new JSONObject(result);
-				if (LOG_ON && COMM.isInfoEnabled()) 
-					COMM.info( "COUNTER: The Web Counting server has sent: " + json.toString());
+				if (LOG_ON && COMM.isEnabledFor(Level.INFO)) 
+					COMM.log(Level.INFO,"COUNTER: The Web Counting server has sent: " + json.toString());
 				//System.out.println("The Web Counting server has sent: " + json.toString());
 				if (json.getBoolean("acall")) {
 					json.remove("acall");
@@ -64,8 +65,8 @@ public class SpringReceiver {
 					json.put("id", Runner.compactAnswer(json.getInt("ticketCalled"), json.get("service").toString(),
 							Runner.getServicedManaged().indexOf(json.get("service"))));
 					json.remove("ticketCalled");
-					if (LOG_ON && COMM.isInfoEnabled()) 
-						COMM.info("SEND: sending to TcallApp...");
+					if (LOG_ON && COMM.isEnabledFor(Level.INFO)) 
+						COMM.log(Level.INFO,"SEND: sending to TcallApp...");
 					//System.out.println(">>> Sending to TcallApp...");
 					return json.toString();
 				} else {
@@ -74,15 +75,15 @@ public class SpringReceiver {
 					json.put("id", Runner.compactAnswer(json.getInt("ticketNumber"), json.get("service").toString(),
 							Runner.getServicedManaged().indexOf(json.get("service"))));
 					json.remove("ticketNumber");
-					if (LOG_ON && COMM.isInfoEnabled()) 
-						COMM.info("SEND: sending to EmitterApp (kiosk) the ticket: "+ json.toString());
+					if (LOG_ON && COMM.isEnabledFor(Level.INFO)) 
+						COMM.log(Level.INFO,"SEND: sending to EmitterApp (kiosk) the ticket: "+ json.toString());
 					//System.out.println(">>> Sending to EmitterApp (kiosk) ...");
 					//System.out.println("The ticket:" + json.toString());
 					return json.toString();
 				}
 			} catch (Exception e) {
-				if (LOG_ON && COMM.isInfoEnabled()) 
-					COMM.info("ERROR: type=Internal Server Error, status=500");
+				if (LOG_ON && COMM.isEnabledFor(Level.INFO)) 
+					COMM.log(Level.INFO,"ERROR: type=Internal Server Error, status=500");
 				return ("Error from the ServiceManager: type=Internal Server Error, status=500");
 			}
 		}

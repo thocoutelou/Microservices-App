@@ -93,7 +93,7 @@ public class CallerApp {
 			System.exit(1);
 			return;
 		}
-		if (LOG_ON && GEN.isEnabledFor(Level.WARN)) 
+		if (LOG_ON && GEN.isEnabledFor(Level.INFO)) 
 			GEN.log(Level.INFO,"INIT: TcallApp is started ...");
 
 		/* Parse the arguments to the beans constructor */

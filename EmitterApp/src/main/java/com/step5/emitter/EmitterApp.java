@@ -7,6 +7,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.log4j.Level;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -15,6 +16,8 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
+import static com.step5.emitter.Log.LOG_ON;
+import static com.step5.emitter.Log.GEN;
 
 @SpringBootApplication
 public class EmitterApp {
@@ -50,7 +53,7 @@ public class EmitterApp {
 	TopicExchange exchange() {
 		return new TopicExchange("sb-boardManager-exchange");
 	}
-
+ //////////////////// MAIN //////////////////////
 	public static void main(String[] args) {
 
 		Options options = new Options();
@@ -72,14 +75,17 @@ public class EmitterApp {
 		try {
 			cmd = parser.parse(options, args);
 		} catch (ParseException e) {
+			if (LOG_ON && GEN.isDebugEnabled()) 
+				GEN.debug(e.getMessage());
 			System.out.println(e.getMessage());
 			formatter.printHelp("utility-name", options);
 
 			System.exit(1);
 			return;
 		}
-
-		System.out.println("Emitter Application is started...");
+		if (LOG_ON && GEN.isEnabledFor(Level.WARN)) 
+			GEN.log(Level.INFO,"INIT: Emitter Application is started...");
+		//System.out.println("Emitter Application is started...");
 
 		/* Parse the arguments to the beans constructor */
 		setIpServer(cmd.getOptionValue("ipServer"));
