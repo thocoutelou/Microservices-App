@@ -1,7 +1,11 @@
 package com.withBoardManager.webServer;
 
+import static com.withBoardManager.webServer.Log.COMM;
+import static com.withBoardManager.webServer.Log.LOG_ON;
+
 import java.util.HashMap;
 
+import org.apache.log4j.Level;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +27,9 @@ public class EventController {
 		int value = ((HashMap<String, CounterOfService>) context.getBean("serviceToSent")).get(service)
 				.getCounterLastCalled();
 		if (((HashMap<String, CounterOfService>) context.getBean("serviceToSent")).get(service).popNextTicket() == -1) {
-			System.out.println("No more tickets for this service");
+			if (LOG_ON && COMM.isEnabledFor(Level.INFO))
+				COMM.info("COUNTER: No more tickets for the service "+service);
+			//System.out.println("No more tickets for the service "+service);
 			Event response = new Event("No more ticket for the service: " + service, -1);
 			return response;
 		} else {

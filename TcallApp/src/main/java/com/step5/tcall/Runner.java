@@ -2,13 +2,10 @@ package com.step5.tcall;
 
 import static com.step5.tcall.Log.COMM;
 import static com.step5.tcall.Log.GEN;
-import static com.step5.tcall.Log.LOGGER_NAME_COMM;
-import static com.step5.tcall.Log.LOGGER_NAME_GEN;
 import static com.step5.tcall.Log.LOG_ON;
 
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Level;
 import org.json.JSONObject;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

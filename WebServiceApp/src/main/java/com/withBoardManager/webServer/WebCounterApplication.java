@@ -1,10 +1,14 @@
 package com.withBoardManager.webServer;
 
+import static com.withBoardManager.webServer.Log.GEN;
+import static com.withBoardManager.webServer.Log.LOG_ON;
+
 import java.util.HashMap;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.apache.commons.cli.*;
+import org.apache.log4j.Level;
 
 @SpringBootApplication
 public class WebCounterApplication {
@@ -56,7 +60,9 @@ public class WebCounterApplication {
 		try {
 			cmd = parser.parse(options, args);
 		} catch (ParseException e) {
-			System.out.println(e.getMessage());
+			if (LOG_ON && GEN.isEnabledFor(Level.INFO)) 
+				GEN.error( "ERROR: "+e.getMessage());
+			//System.out.println(e.getMessage());
 			formatter.printHelp("utility-name", options);
 
 			System.exit(1);
@@ -73,8 +79,9 @@ public class WebCounterApplication {
 		} catch (Exception e) {
 			setNumberOfServices(getServiceToSent().size());
 		}
-		
-		System.out.println("Starting Web Server...");
+		if (LOG_ON && GEN.isInfoEnabled()) 
+			GEN.info("INIT: Starting Web Server and ready!");
+		//System.out.println("Starting Web Server...");
 		SpringApplication.run(WebCounterApplication.class, args);
 	
 	}

@@ -63,7 +63,7 @@ public final class Log {
 		COMM.setLevel(Level.INFO);
 		ConsoleAppender console = new ConsoleAppender(); // create appender
 		// configure the appender
-		String PATTERN = "[%p] %d %c %M - %m \n";
+		String PATTERN = "[%p] %d | %c - %m \n";
 		console.setLayout(new PatternLayout(PATTERN));
 		console.setThreshold(Level.INFO);
 		console.activateOptions();
