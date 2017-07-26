@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.log4j.Level;
 import org.json.simple.JSONObject;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,8 +47,8 @@ public class RedirectController {
 
 				//interData.clear();
 			}
-			if (LOG_ON && GEN.isTraceEnabled()) 
-				GEN.trace("INIT: " + boards.toString());
+			if (LOG_ON && GEN.isEnabledFor(Level.WARN)) 
+				GEN.warn("INIT: " + boards.toString());
 			//System.out.println(boards.toString());
 			client.close();
 			
@@ -74,8 +75,8 @@ public class RedirectController {
 
 	@RequestMapping("/queue")
 	public String queue(@RequestParam(value = "ip") String ip) {
-		if (LOG_ON && COMM.isTraceEnabled()) 
-			COMM.trace("QUEUE: Request from: " + ip);
+		if (LOG_ON && COMM.isEnabledFor(Level.WARN)) 
+			COMM.warn("QUEUE: Request from: " + ip);
 		//System.out.println("Request from: " + ip);
 		ArrayList<String> services = findServices(ip);
 		if (services == null) {

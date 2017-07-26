@@ -1,6 +1,7 @@
 package com.withBoardManager.boardManager;
 
 import static com.withBoardManager.boardManager.Log.GEN;
+
 import static com.withBoardManager.boardManager.Log.COMM;
 import static com.withBoardManager.boardManager.Log.LOG_ON;
 
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Level;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -44,6 +46,7 @@ public class Runner implements CommandLineRunner {
 		this.reciever = receiver;
 		Runner.rabbitTemplate = rabbitTemplate;
 		this.context = context;
+	
 	}
 
 	public static String compactAnswer(int count, String service, int index) {
@@ -62,10 +65,12 @@ public class Runner implements CommandLineRunner {
 
 	public void run(String... args) throws Exception {
 
+		
+		
 		/* For the Receiver Mode */
-		System.out.println("----- Ready to receive event -----");
-		if (LOG_ON && GEN.isInfoEnabled()) 
-			GEN.info("INIT: Ready to receive event");
+		//System.out.println("----- Ready to receive event -----");
+		if (LOG_ON && GEN.isEnabledFor(Level.INFO)) 
+			GEN.log(Level.INFO,"INIT: Ready to receive event");
 		setServicedManaged(ServiceManagerApplication.getNamesServicesToSent());
 		setPrefix(ServiceManagerApplication.getPrefix());
 		while (true) {
@@ -77,12 +82,12 @@ public class Runner implements CommandLineRunner {
 				if (getServicedManaged().contains(response)) {
 					rabbitTemplate.convertAndSend("spring-boot-exchanger", response,
 							compactAnswer(count, response, getServicedManaged().indexOf(response)));
-					if (LOG_ON && COMM.isInfoEnabled()) 
-						COMM.info("SEND: Send message to " + response);
+					if (LOG_ON && COMM.isEnabledFor(Level.WARN)) 
+						COMM.log(Level.INFO,"SEND: Send message to " + response);
 					//System.out.println("Send message to: " + response);
 				} else {
-					if (LOG_ON && COMM.isInfoEnabled()) 
-						COMM.info("ERROR:" +response +" >>> Unknown service...");
+					if (LOG_ON && COMM.isEnabledFor(Level.WARN)) 
+						COMM.log(Level.INFO,"ERROR:" +response +" >>> Unknown service...");
 					//System.out.println("Received: " + response + ">>> Unknown service...");
 				}
 				context.getBean(HttpResponse.class).setNew(false);

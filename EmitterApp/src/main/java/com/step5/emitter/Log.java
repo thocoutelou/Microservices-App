@@ -19,24 +19,25 @@ along with the muDEBS platform. If not, see <http://www.gnu.org/licenses/>.
 Initial developer(s): Denis Conan
 Contributor(s):
  */
-package com.withBoardManager.boardManager;
+package com.step5.emitter;
 
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
-import org.apache.log4j.*;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 
 /**
  * This class contains the configuration of some logging facilities.
  * 
  * To recapitulate, logging levels are: TRACE, DEBUG, INFO, WARN, ERROR, FATAL.
- * 
+
  */
 public final class Log {
 	/**
 	 * states whether logging is enabled or not.
 	 */
 	public static final boolean LOG_ON = true;
-
 	/**
 	 * name of logger for the general part (config, etc.).
 	 */
@@ -53,7 +54,7 @@ public final class Log {
 	 * logger object for the communication part.
 	 */
 	public static final Logger COMM = Logger.getLogger(LOGGER_NAME_COMM);
-
+	
 	/**
 	 * static configuration, which can be changed by command line options.
 	 */
@@ -88,7 +89,8 @@ public final class Log {
 	 * @param level
 	 *            the level.
 	 */
-	public static void configureALogger(final String loggerName, final Level level) {
+	public static void configureALogger(final String loggerName,
+			final Level level) {
 		if (loggerName == null) {
 			return;
 		}
@@ -96,7 +98,7 @@ public final class Log {
 			GEN.setLevel(level);
 		} else if (loggerName.equalsIgnoreCase(LOGGER_NAME_COMM)) {
 			COMM.setLevel(level);
-
+		
 		}
 	}
 }
