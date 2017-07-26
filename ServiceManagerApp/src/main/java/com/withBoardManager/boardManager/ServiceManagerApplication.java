@@ -173,7 +173,7 @@ public class ServiceManagerApplication {
 	@Bean
 	Binding binding() {
 		if (LOG_ON && GEN.isEnabledFor(Level.INFO)) 
-			GEN.log(Level.INFO, "INIT: "+serviceForReceiving);
+			GEN.log(Level.INFO, "INIT: Key for receiving: "+serviceForReceiving);
 		//System.out.println(serviceForReceiving);
 		Binding b = BindingBuilder.bind(queue()).to(exchange()).with("CallForBoardManager");
 		return b;

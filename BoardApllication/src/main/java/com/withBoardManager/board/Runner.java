@@ -1,7 +1,11 @@
 package com.withBoardManager.board;
 
+import static com.withBoardManager.board.Log.GEN;
+import static com.withBoardManager.board.Log.LOG_ON;
+
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Level;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -22,14 +26,16 @@ public class Runner implements CommandLineRunner {
 
 	public void run(String... args) throws Exception {
 
-		while(true) {
+
 		/* For the Receiver Mode */
-		System.out.println("---- Ready for forward request to the BoardManager ----");
+		if (LOG_ON && GEN.isEnabledFor(Level.INFO)) 
+			GEN.info("INIT: Ready to forward request to the BoardManager");
+		//System.out.println("---- Ready for forward request to the BoardManager ----");
 		while (true) {
 			TimeUnit.MILLISECONDS.sleep(100);
 			
 			}
-		}
+		
 	}
 
 }

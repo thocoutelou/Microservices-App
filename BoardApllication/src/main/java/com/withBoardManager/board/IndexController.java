@@ -2,10 +2,14 @@ package com.withBoardManager.board;
 
 
 
+import static com.withBoardManager.board.Log.COMM;
+import static com.withBoardManager.board.Log.LOG_ON;
+
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Level;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -38,7 +42,8 @@ public class IndexController {
     	RestTemplate restTemplate = new RestTemplate();
     	//Get the ip of the client
     	String ipSource = request.getRemoteAddr();
-    	System.out.println("Request from: "+ipSource);
+		if (LOG_ON && COMM.isEnabledFor(Level.INFO)) 
+			COMM.info("RECEIVE: Request from: "+ipSource);
     	String bmUrl= "http://"+ipManager+":8080/queue?ip="+ipSource;
     	//GET the queueName
     	ResponseEntity<String> response = restTemplate.getForEntity( bmUrl, String.class);

@@ -1,9 +1,12 @@
 package com.withBoardManager.board;
 
+import static com.withBoardManager.board.Log.GEN;
+import static com.withBoardManager.board.Log.LOG_ON;
+
 import java.util.ArrayList;
 
 import org.apache.commons.cli.*;
-
+import org.apache.log4j.Level;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
@@ -61,7 +64,8 @@ public class BoardViewerApplication {
 		try {
 			cmd = parser.parse(options, args);
 		} catch (ParseException e) {
-			System.out.println(e.getMessage());
+			if (LOG_ON && GEN.isEnabledFor(Level.INFO)) 
+				GEN.error(e.getMessage());
 			formatter.printHelp("utility-name", options);
 
 			System.exit(1);
