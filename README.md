@@ -2,6 +2,11 @@
 
 A java application made for an internship for the company Artexe SPA, Milano
 
+To see the visual support of presentation, links are here:
+
+* [Introduction to microservices](https://docs.google.com/presentation/d/1pn9b_nvikDYgB3SHKhdst1AaawZzB8uPamtuvcJ8uGw/edit?usp=sharing)
+* [Microservices: a more advanced design](https://docs.google.com/presentation/d/1pt_wSeMzd1c5xuuobuICx7n38llLRvQWh5K69NPmVic/edit?usp=sharing)
+
 --------------
 
 ## How to install:
@@ -15,6 +20,12 @@ Or for the app which does not need Spring boot:
 > $ mvn package
 
 The the .jar file is in the directory ./target
+
+#### Tips:
+All the docker images I have used are in the dedicated archive, you can download it [here](https://drive.google.com/open?id=0B0yOz4FKw4qVM1Y1WllKMmZwX0k). Just run:
+
+> $ zcat myDockerImages.tar.gz | docker load
+
 
 --------------
 ## Logs infrastructure:
