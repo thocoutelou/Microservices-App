@@ -10,13 +10,22 @@ In the directory of an app, type the command:
 
 > $ mvn package spring-boot:repackage
 
-Or for the app which doenot need Spring boot:
+Or for the app which does not need Spring boot:
 
 > $ mvn package
 
 The the .jar file is in the directory ./target
 
 --------------
+## Logs infrastructure:
+
+The java applications are now implementing log4j in order to have standard logs format.
+
+This step incorporates the setting up of a ELK stack in Docker containers. The RabbitMQ server has Logstah pipeline directly to Elasticsearch. The other Docker logs are catch by a FileBeats proxy (in its own docker container) via the Docker API. Then, there is a Logstash pipeline which links FileBeats to Elasticsearch. At the end, an instance of Kinana is running to look at all the logs.
+
+This is mainly configration of the ELK stack (especially the Logstash filters).
+
+
 ## Step 5:
 
 In this step, the EmitterApp & TcallApp are appeared. They communicate with the BoardManager (rename ServiceManager to avoid confusion) by RPC using the AMQP of the RabbitMQ server.
