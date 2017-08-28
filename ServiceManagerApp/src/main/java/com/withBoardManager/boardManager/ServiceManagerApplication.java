@@ -35,6 +35,7 @@ public class ServiceManagerApplication {
 	public static int end = 10;
 	public static String serviceForReceiving;
 	public static String data;
+	public static String dataPass;
 	public static String addressDB;
 	private static TopicExchange exchangeForSendind;
 	private static AmqpAdmin amqpAdmin;
@@ -131,6 +132,14 @@ public class ServiceManagerApplication {
 	public static void setAddressDB(String address) {
 		ServiceManagerApplication.addressDB = address;
 	}
+	
+	public static void setPasswordDB(String passwrd) {
+		ServiceManagerApplication.dataPass = passwrd;
+	}
+	public static String getPassDB() {
+		return dataPass;
+	}
+	
 	/*
 	 * Bean for the RabbitMq service; for more details, see the web site
 	 */
@@ -228,6 +237,10 @@ public class ServiceManagerApplication {
 		data.setRequired(true);
 		options.addOption(data);
 
+		Option dataPass = new Option("m", "dataPass", true, "password to be authentificated into the Redis db");
+		dataPass.setRequired(true);
+		options.addOption(dataPass);
+
 		/*
 		Option serviceForReceiving = new Option("s", "serviceForReceiving", true,
 				"Name of the service for receiving message from terminalCall");
@@ -316,8 +329,10 @@ public class ServiceManagerApplication {
 			setSTART(Integer.parseInt(cmd.getOptionValue("start")));
 		}
 		setAddressDB(cmd.getOptionValue("data"));
+		setPasswordDB(cmd.getOptionValue("dataPass"));
 		
-		RedirectController.configureData(getaddressDB());
+		
+		RedirectController.configureData(getaddressDB(),getPassDB());
 		/* Launch the Spring-boot application */
 		new SpringApplicationBuilder(ServiceManagerApplication.class).web(true).run(args);
 	}

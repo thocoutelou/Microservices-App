@@ -30,7 +30,7 @@ public class SpringReceiver {
 				if (LOG_ON && GEN.isEnabledFor(Level.INFO)) 
 					GEN.log(Level.INFO,"Configuration reloaded from the database");
 				//System.out.println("Configuration reloaded from the database");
-				RedirectController.configureData(ServiceManagerApplication.addressDB);
+				RedirectController.configureData(ServiceManagerApplication.addressDB,ServiceManagerApplication.getPassDB());
 				json.put("Configuration", "reloaded");
 			} catch (Exception e) {
 				json.put("error", "new configuration failed");

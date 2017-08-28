@@ -23,11 +23,11 @@ public class RedirectController {
 	public static JSONObject data;
 	public static HashMap<String, String> boards = new HashMap<>();
 
-	public static void configureData(String address) {
+	public static void configureData(String address, String password) {
 		// JSONParser parser = new JSONParser();
 		try {
 			Jedis client = new Jedis(address);
-			client.auth("redis");
+			client.auth(password);
 			Set<String> board = client.smembers("boards");
 			if (LOG_ON && GEN.isDebugEnabled()) 
 				GEN.debug("INIT: " + board.toString());
